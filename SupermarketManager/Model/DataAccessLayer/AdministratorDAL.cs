@@ -801,15 +801,19 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter categoryNameParam = new SqlParameter("@category_name", categoryName);
                 cmd.Parameters.Add(categoryNameParam);
 
+                conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
                 {
                     return reader.GetInt32(0);
-                } else {
+                }
+                else
+                {
                     throw new SqlOperationException("No category found.");
                 }
-            } finally { conn.Close(); } 
+            }
+            finally { conn.Close(); }
         }
         public decimal GetTotalSalePriceOfCategory(string categoryName)
         {
@@ -823,9 +827,10 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter categoryIdParam = new SqlParameter("@category_id", categoryId);
                 cmd.Parameters.Add(categoryIdParam);
 
+                conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                if(reader.Read())
+                if (reader.Read())
                 {
                     return reader.GetDecimal(0);
                 }
@@ -851,6 +856,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.Parameters.Add(cashierNameParam);
                 cmd.Parameters.Add(monthParam);
 
+                conn.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -861,9 +867,78 @@ namespace SupermarketManager.Model.DataAccessLayer
                         dailyRevenueList.Add(dailyRevenue);
                     }
                 }
-            } finally { conn.Close(); }
+            }
+            finally { conn.Close(); }
 
             return dailyRevenueList;
+        }
+        private Receipt GetHighestReceipt(int day)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("HighestReceipt", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter dayParam = new SqlParameter("@day", day);
+                cmd.Parameters.Add(dayParam);
+
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Receipt highestReceipt = new Receipt();
+                    highestReceipt.ReceiptID = reader.GetInt32(0);
+                    highestReceipt.ReceiptProductId = reader.GetInt32(1);
+                    highestReceipt.MonthOfIssuing = reader.GetString(0);
+                    highestReceipt.DayOfIssuing = reader.GetInt32(2);
+                    highestReceipt.YearOfIssuing = reader.GetInt32(3);
+                    highestReceipt.CashierName = reader.GetString(1);
+                    highestReceipt.AmountReceived = reader.GetDecimal(0);
+
+                    return highestReceipt;
+                }
+                else
+                {
+                    throw new SqlOperationException("No highest receipt.");
+                }
+            }
+            finally { conn.Close(); }
+        }
+
+        public Product GetHighestReceiptProduct(int day)
+        {
+            Receipt highestReceipt = GetHighestReceipt(day);
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("ProductFromReceipt", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter receiptIdParam = new SqlParameter("@receipt_id", highestReceipt.ReceiptID);
+                cmd.Parameters.Add(receiptIdParam);
+
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Product product = new Product();
+                    product.ProductId = reader.GetInt32(0);
+                    product.Barcode = reader.GetInt32(1);
+                    product.CategoryID = reader.GetInt32(2);
+                    product.ManufacturerID = reader.GetInt32(3);
+
+                    return product;
+                }
+                else
+                {
+                    throw new SqlOperationException("Can't find product info of highest receipt.");
+                }
+            }
+            finally { conn.Close(); }
         }
     }
 

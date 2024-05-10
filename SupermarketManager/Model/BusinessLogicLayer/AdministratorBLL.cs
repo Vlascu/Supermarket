@@ -216,5 +216,14 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             return _administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month);
         }
+        public Product GetHighestReceiptProduct(int day)
+        {
+            if (day == 0)
+            {
+                throw new ArgumentException("Can't have day 0.");
+            }
+
+            return _administratorDAL.GetHighestReceiptProduct(day);
+        }
     }
 }
