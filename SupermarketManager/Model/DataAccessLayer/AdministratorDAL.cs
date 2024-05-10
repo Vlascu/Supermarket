@@ -490,8 +490,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                     productStock.ProductID = reader.GetInt32(1);
                     productStock.Quantity = reader.GetInt32(2);
                     productStock.UnitOfMeasure = reader.GetString(2);
-                    productStock.SupplyDate = reader.GetDateTime(3);
-                    productStock.ExpirationDate = reader.GetDateTime(4);
+                    productStock.DayOfSupply = reader.GetInt32(3);
+                    productStock.MonthOfSupply = reader.GetInt32(4);
+                    productStock.YearOfSupply = reader.GetInt32(5);
+                    productStock.DayOfExpiration = reader.GetInt32(6);
+                    productStock.MonthOfExpiration = reader.GetInt32(6);
+                    productStock.YearOfExpiration = reader.GetInt32(7);
                     productStock.PurchasePrice = reader.GetDecimal(5);
                     productStock.SalePrice = reader.GetDecimal(6);
 
@@ -513,8 +517,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
-                SqlParameter supplyDateParam = new SqlParameter("@supply_date", productStock.SupplyDate);
-                SqlParameter expirationDateParam = new SqlParameter("@expiration_date", productStock.ExpirationDate);
+                SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
+                SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
+                SqlParameter supplyYearParam = new SqlParameter("@supply_year", productStock.YearOfSupply);
+                SqlParameter expirationDayParam = new SqlParameter("@expiration_day", productStock.DayOfExpiration);
+                SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
+                SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
                 SqlParameter salePriceParam = new SqlParameter("@sale_price", productStock.SalePrice);
 
@@ -522,8 +530,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.Parameters.Add(stockProductID);
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
-                cmd.Parameters.Add(supplyDateParam);
-                cmd.Parameters.Add(expirationDateParam);
+                cmd.Parameters.Add(supplyDayParam);
+                cmd.Parameters.Add(supplyMonthParam);
+                cmd.Parameters.Add(supplyYearParam);
+                cmd.Parameters.Add(expirationDayParam);
+                cmd.Parameters.Add(expirationMonthParam);
+                cmd.Parameters.Add(expirationYearParam);
                 cmd.Parameters.Add(purchasePriceParam);
                 cmd.Parameters.Add(salePriceParam);
 
@@ -564,23 +576,28 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateProductStock", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter productStockIdParam = new SqlParameter("@product_stock_id", productStock.ProductStockID);
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
-                SqlParameter supplyDateParam = new SqlParameter("@supply_date", productStock.SupplyDate);
-                SqlParameter expirationDateParam = new SqlParameter("@expiration_date", productStock.ExpirationDate);
+                SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
+                SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
+                SqlParameter supplyYearParam = new SqlParameter("@supply_year", productStock.YearOfSupply);
+                SqlParameter expirationDayParam = new SqlParameter("@expiration_day", productStock.DayOfExpiration);
+                SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
+                SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
                 SqlParameter salePriceParam = new SqlParameter("@sale_price", productStock.SalePrice);
 
-                productStockIdParam.Direction = ParameterDirection.Output;
 
-                cmd.Parameters.Add(productStockIdParam);
                 cmd.Parameters.Add(stockProductID);
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
-                cmd.Parameters.Add(supplyDateParam);
-                cmd.Parameters.Add(expirationDateParam);
+                cmd.Parameters.Add(supplyDayParam);
+                cmd.Parameters.Add(supplyMonthParam);
+                cmd.Parameters.Add(supplyYearParam);
+                cmd.Parameters.Add(expirationDayParam);
+                cmd.Parameters.Add(expirationMonthParam);
+                cmd.Parameters.Add(expirationYearParam);
                 cmd.Parameters.Add(purchasePriceParam);
                 cmd.Parameters.Add(salePriceParam);
 
@@ -600,19 +617,26 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("GetStockId", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductStockID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
-                SqlParameter supplyDateParam = new SqlParameter("@supply_date", productStock.SupplyDate);
-                SqlParameter expirationDateParam = new SqlParameter("@expiration_date", productStock.ExpirationDate);
+                SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
+                SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
+                SqlParameter supplyYearParam = new SqlParameter("@supply_year", productStock.YearOfSupply);
+                SqlParameter expirationDayParam = new SqlParameter("@expiration_day", productStock.DayOfExpiration);
+                SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
+                SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
                 SqlParameter salePriceParam = new SqlParameter("@sale_price", productStock.SalePrice);
 
-                cmd.Parameters.Add(stockProductID);
+
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
-                cmd.Parameters.Add(supplyDateParam);
-                cmd.Parameters.Add(expirationDateParam);
+                cmd.Parameters.Add(supplyDayParam);
+                cmd.Parameters.Add(supplyMonthParam);
+                cmd.Parameters.Add(supplyYearParam);
+                cmd.Parameters.Add(expirationDayParam);
+                cmd.Parameters.Add(expirationMonthParam);
+                cmd.Parameters.Add(expirationYearParam);
                 cmd.Parameters.Add(purchasePriceParam);
                 cmd.Parameters.Add(salePriceParam);
 
@@ -891,9 +915,9 @@ namespace SupermarketManager.Model.DataAccessLayer
                     Receipt highestReceipt = new Receipt();
                     highestReceipt.ReceiptID = reader.GetInt32(0);
                     highestReceipt.ReceiptProductId = reader.GetInt32(1);
-                    highestReceipt.MonthOfIssuing = reader.GetString(0);
-                    highestReceipt.DayOfIssuing = reader.GetInt32(2);
-                    highestReceipt.YearOfIssuing = reader.GetInt32(3);
+                    highestReceipt.MonthOfIssuing = reader.GetInt32(2);
+                    highestReceipt.DayOfIssuing = reader.GetInt32(3);
+                    highestReceipt.YearOfIssuing = reader.GetInt32(4);
                     highestReceipt.CashierName = reader.GetString(1);
                     highestReceipt.AmountReceived = reader.GetDecimal(0);
 

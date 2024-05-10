@@ -52,25 +52,69 @@ namespace SupermarketManager.Model.EntityLayer
             }
         }
 
-        private DateTime supplyDate;
-        public DateTime SupplyDate
+        private int? monthOfSupply;
+        public int? MonthOfSupply
         {
-            get { return supplyDate; }
+            get { return monthOfSupply; }
             set
             {
-                supplyDate = value;
-                NotifyPropertyChanged("SupplyDate");
+                monthOfSupply = value;
+                NotifyPropertyChanged("MonthOfSupply");
             }
         }
 
-        private DateTime expirationDate;
-        public DateTime ExpirationDate
+        private int? dayOfSupply;
+        public int? DayOfSupply
         {
-            get { return expirationDate; }
+            get { return dayOfSupply; }
             set
             {
-                expirationDate = value;
-                NotifyPropertyChanged("ExpirationDate");
+                dayOfSupply = value;
+                NotifyPropertyChanged("DayOfSupply");
+            }
+        }
+
+        private int? yearOfSupply;
+        public int? YearOfSupply
+        {
+            get { return yearOfSupply; }
+            set
+            {
+                yearOfSupply = value;
+                NotifyPropertyChanged("YearOfSupply");
+            }
+        }
+
+        private int? monthOfExpiration;
+        public int? MonthOfExpiration
+        {
+            get { return monthOfExpiration; }
+            set
+            {
+                monthOfExpiration = value;
+                NotifyPropertyChanged("MonthOfExpiration");
+            }
+        }
+
+        private int? dayOfExpiration;
+        public int? DayOfExpiration
+        {
+            get { return dayOfExpiration; }
+            set
+            {
+                dayOfExpiration = value;
+                NotifyPropertyChanged("DayOfExpiration");
+            }
+        }
+
+        private int? yearOfExpiration;
+        public int? YearOfExpiration
+        {
+            get { return yearOfExpiration; }
+            set
+            {
+                yearOfExpiration = value;
+                NotifyPropertyChanged("YearOfExpiration");
             }
         }
 

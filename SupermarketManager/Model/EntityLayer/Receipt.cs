@@ -30,8 +30,8 @@ namespace SupermarketManager.Model.EntityLayer
             }
         }
 
-        private string monthOfIssuing;
-        public string MonthOfIssuing
+        private int? monthOfIssuing;
+        public int? MonthOfIssuing
         {
             get { return monthOfIssuing; }
             set
