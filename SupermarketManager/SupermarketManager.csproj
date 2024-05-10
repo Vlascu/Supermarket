@@ -83,7 +83,8 @@
     <Compile Include="Utils\DailyRevenue.cs" />
     <Compile Include="Utils\Exceptions\SqlOperationException.cs" />
     <Compile Include="Utils\MarkupCategorySelector.cs" />
-    <Compile Include="Utils\OperationsType.cs" />
+    <Compile Include="Utils\OfferManager.cs" />
+    <Compile Include="Utils\Enums\OperationsType.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

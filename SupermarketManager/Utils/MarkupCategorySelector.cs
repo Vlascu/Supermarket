@@ -8,7 +8,7 @@ namespace SupermarketManager.Utils
 {
     public class MarkupCategorySelector
     {
-        public static int GetMarkUpCategory(decimal price)
+        public static int GetMarkupCategory(decimal price)
         {
             if (price > 0 && price < 50)
             {

@@ -30,12 +30,12 @@ namespace SupermarketManager.Utils
         }
         public static bool CanGetOffer(ProductStock productStock)
         {
-            if(productStock == null)
+            if (productStock == null)
             {
                 throw new ArgumentNullException("Can't check offer for a null stock.");
             }
 
-            if(productStock.YearOfExpiration == DateTime.Now.Year && productStock.MonthOfExpiration == DateTime.Now.Month)
+            if (productStock.YearOfExpiration == DateTime.Now.Year && productStock.MonthOfExpiration == DateTime.Now.Month)
             {
                 int daysUntilExpiration = (int)(productStock.DayOfExpiration - DateTime.Now.Day);
 
@@ -43,7 +43,7 @@ namespace SupermarketManager.Utils
                 {
                     int offerPercentage = GetOfferPercentage(daysUntilExpiration);
 
-                    if(productStock.SalePrice - offerPercentage * productStock.SalePrice / 100 > productStock.PurchasePrice )
+                    if (productStock.SalePrice - offerPercentage * productStock.SalePrice / 100 > productStock.PurchasePrice)
                     {
                         return true;
                     }

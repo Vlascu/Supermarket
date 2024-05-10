@@ -30,7 +30,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             decimal pricePerProduct = purchasePrice / quantity;
-            int markupPercentage = _administratorDAL.GetMarkupByCategory(MarkupCategorySelector.GetMarkUpCategory(pricePerProduct));
+            int markupPercentage = _administratorDAL.GetMarkupByCategory(MarkupCategorySelector.GetMarkupCategory(pricePerProduct));
             decimal markupProductPrice = pricePerProduct + (markupPercentage * pricePerProduct) / 100;
             decimal stockMarkupPrice = markupProductPrice * quantity;
 
@@ -39,8 +39,12 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.UnitOfMeasure = unitOfMeasure;
             stock.PurchasePrice = purchasePrice;
             stock.SalePrice = stockMarkupPrice;
-            stock.ExpirationDate = experationDate;
-            stock.SupplyDate = DateTime.Now;
+            stock.DayOfExpiration = experationDate.Day;
+            stock.MonthOfExpiration = experationDate.Month;
+            stock.YearOfExpiration = experationDate.Year;
+            stock.DayOfSupply = DateTime.Now.Day;
+            stock.MonthOfSupply = DateTime.Now.Month;
+            stock.YearOfSupply = DateTime.Now.Year;
             stock.ProductID = productId;
 
             if (opType == OperationsType.Insert)
@@ -78,8 +82,12 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.UnitOfMeasure = unitOfMeasure;
             stock.PurchasePrice = purchasePrice;
             stock.SalePrice = newSalePrice;
-            stock.ExpirationDate = experationDate;
-            stock.SupplyDate = DateTime.Now;
+            stock.DayOfExpiration = experationDate.Day;
+            stock.MonthOfExpiration = experationDate.Month;
+            stock.YearOfExpiration = experationDate.Year;
+            stock.DayOfSupply = DateTime.Now.Day;
+            stock.MonthOfSupply = DateTime.Now.Month;
+            stock.YearOfSupply = DateTime.Now.Year;
             stock.ProductID = productId;
             stock.ProductStockID = _administratorDAL.GetStockId(stock);
 
