@@ -1,6 +1,7 @@
 ﻿using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Model.EntityLayer;
 using SupermarketManager.Utils;
+using SupermarketManager.Utils.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -232,6 +233,88 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             return _administratorDAL.GetHighestReceiptProduct(day);
+        }
+        public bool ApplyOfferToAllStocks()
+        {
+            int offersApplied = 0;
+
+            ObservableCollection<ProductStock> stocks = _administratorDAL.GetAllProductStocks();
+
+            foreach (ProductStock stock in stocks)
+            {
+                int offerPercentage = 0;
+
+                if (OfferManager.CanGetOffer(stock) == OfferTypes.EXPIRATION)
+                {
+                    offersApplied++;
+                    offerPercentage = OfferManager.GetOfferPercentageByExpiration((int)(stock.DayOfExpiration - DateTime.Now.Day));
+                    stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
+
+                    _administratorDAL.UpdateProductStock(stock);
+
+                    Offer offer = AddOfferProperties("Expiration", stock);
+
+                    CheckAndAddOffer(offer);
+
+                }
+                else if (OfferManager.CanGetOffer(stock) == OfferTypes.STOCK_LIQUIDATION)
+                {
+                    offersApplied++;
+                    offerPercentage = OfferManager.GetOfferPercentageByLiquidation();
+                    stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
+
+                    _administratorDAL.UpdateProductStock(stock);
+
+                    Offer offer = AddOfferProperties("Liquidation", stock);
+
+                    CheckAndAddOffer(offer);
+                }
+                else if (OfferManager.CanGetOffer(stock) == OfferTypes.BOTH)
+                {
+                    offersApplied++;
+                    offerPercentage = Math.Max(OfferManager.GetOfferPercentageByLiquidation(), OfferManager.GetOfferPercentageByExpiration((int)(stock.DayOfExpiration - DateTime.Now.Day)));
+                    stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
+
+                    _administratorDAL.UpdateProductStock(stock);
+
+                    Offer offer = AddOfferProperties("Liquidation", stock);
+
+                    CheckAndAddOffer(offer);
+                }
+            }
+
+            if (offersApplied > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void CheckAndAddOffer(Offer offer)
+        {
+            if (_administratorDAL.DoesSimilarOfferExist(offer))
+            {
+                _administratorDAL.UpdateOffer(offer);
+            }
+            else
+            {
+                _administratorDAL.AddOffer(offer);
+            }
+        }
+        private Offer AddOfferProperties(string reason, ProductStock stock)
+        {
+            Offer offer = new Offer();
+            offer.ProductID = stock.ProductID;
+            offer.Reason = reason;
+
+            offer.ValidFromDay = DateTime.Now.Day;
+            offer.ValidFromMonth = DateTime.Now.Month;
+            offer.ValidFromYear = DateTime.Now.Year;
+
+            offer.ValidToDay = stock.DayOfExpiration;
+            offer.ValidToMonth = stock.MonthOfExpiration;
+            offer.ValidToYear = stock.YearOfExpiration;
+
+            return offer;
         }
     }
 }

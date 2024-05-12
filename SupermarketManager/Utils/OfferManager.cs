@@ -1,4 +1,5 @@
 ﻿using SupermarketManager.Model.EntityLayer;
+using SupermarketManager.Utils.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SupermarketManager.Utils
 {
     public class OfferManager
     {
-        public static int GetOfferPercentage(int daysUntilExpiration)
+        public static int GetOfferPercentageByExpiration(int daysUntilExpiration)
         {
             if (daysUntilExpiration == 0 && daysUntilExpiration == 1)
             {
@@ -28,11 +29,23 @@ namespace SupermarketManager.Utils
                 return 0;
             }
         }
-        public static bool CanGetOffer(ProductStock productStock)
+        public static int GetOfferPercentageByLiquidation()
         {
+            return 25;
+        }
+        public static OfferTypes CanGetOffer(ProductStock productStock)
+        {
+            bool liquidation = false;
+            bool expiration = false;
+
             if (productStock == null)
             {
                 throw new ArgumentNullException("Can't check offer for a null stock.");
+            }
+
+            if (productStock.Quantity < 10)
+            {
+                liquidation = true;
             }
 
             if (productStock.YearOfExpiration == DateTime.Now.Year && productStock.MonthOfExpiration == DateTime.Now.Month)
@@ -41,15 +54,29 @@ namespace SupermarketManager.Utils
 
                 if (daysUntilExpiration <= 7)
                 {
-                    int offerPercentage = GetOfferPercentage(daysUntilExpiration);
+                    int offerPercentage = GetOfferPercentageByExpiration(daysUntilExpiration);
 
                     if (productStock.SalePrice - offerPercentage * productStock.SalePrice / 100 > productStock.PurchasePrice)
                     {
-                        return true;
+                        expiration = true;
                     }
                 }
             }
-            return false;
+
+            if (liquidation && expiration)
+            {
+                return OfferTypes.BOTH;
+            }
+            else if (liquidation && !expiration)
+            {
+                return OfferTypes.STOCK_LIQUIDATION;
+            }
+            else if (!liquidation && expiration)
+            {
+                return OfferTypes.EXPIRATION;
+            }
+
+            return OfferTypes.NONE;
         }
     }
 }

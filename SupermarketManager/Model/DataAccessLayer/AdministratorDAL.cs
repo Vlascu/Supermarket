@@ -971,6 +971,147 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
+        public void AddOffer(Offer offer)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("AddOffer", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter offerIdParam = new SqlParameter("@offer_id", offer.OfferID) { Direction = ParameterDirection.Output };
+                SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
+                SqlParameter productIdParam = new SqlParameter("@product_id", offer.ProductID);
+                SqlParameter discountPercentageParam = new SqlParameter("@discount_percentage", offer.DiscountPercentage);
+                SqlParameter validFromDayParam = new SqlParameter("@valid_from_day", offer.ValidFromDay);
+                SqlParameter validFromMonthParam = new SqlParameter("@valid_from_month", offer.ValidFromMonth);
+                SqlParameter validFromYearParam = new SqlParameter("@valid_from_year", offer.ValidFromYear);
+                SqlParameter validToDayParam = new SqlParameter("@valid_to_day", offer.ValidToDay);
+                SqlParameter validToMonthParam = new SqlParameter("@valid_to_month", offer.ValidToMonth);
+                SqlParameter validToYearParam = new SqlParameter("@valid_to_year", offer.ValidToYear);
+
+                cmd.Parameters.Add(offerIdParam);
+                cmd.Parameters.Add(reasonParam);
+                cmd.Parameters.Add(productIdParam);
+                cmd.Parameters.Add(discountPercentageParam);
+                cmd.Parameters.Add(validFromDayParam);
+                cmd.Parameters.Add(validFromMonthParam);
+                cmd.Parameters.Add(validFromYearParam);
+                cmd.Parameters.Add(validToDayParam);
+                cmd.Parameters.Add(validToMonthParam);
+                cmd.Parameters.Add(validToYearParam);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+                offer.OfferID = (int)offerIdParam.Value;
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to add offer with reason: " + offer.Reason);
+            }
+            finally { conn.Close(); }
+        }
+        public void DeleteOffer(Offer offer)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("DeleteOffer", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter offerIdParam = new SqlParameter("@offer_id", offer.OfferID);
+                cmd.Parameters.Add(offerIdParam);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to delete offer with ID: " + offer.OfferID);
+            }
+            finally { conn.Close(); }
+        }
+        public void UpdateOffer(Offer offer)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("UpdateOffer", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter offerIdParam = new SqlParameter("@offer_id", offer.OfferID) { Direction = ParameterDirection.Output };
+                SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
+                SqlParameter productIdParam = new SqlParameter("@product_id", offer.ProductID);
+                SqlParameter discountPercentageParam = new SqlParameter("@discount_percentage", offer.DiscountPercentage);
+                SqlParameter validFromDayParam = new SqlParameter("@valid_from_day", offer.ValidFromDay);
+                SqlParameter validFromMonthParam = new SqlParameter("@valid_from_month", offer.ValidFromMonth);
+                SqlParameter validFromYearParam = new SqlParameter("@valid_from_year", offer.ValidFromYear);
+                SqlParameter validToDayParam = new SqlParameter("@valid_to_day", offer.ValidToDay);
+                SqlParameter validToMonthParam = new SqlParameter("@valid_to_month", offer.ValidToMonth);
+                SqlParameter validToYearParam = new SqlParameter("@valid_to_year", offer.ValidToYear);
+
+                cmd.Parameters.Add(offerIdParam);
+                cmd.Parameters.Add(reasonParam);
+                cmd.Parameters.Add(productIdParam);
+                cmd.Parameters.Add(discountPercentageParam);
+                cmd.Parameters.Add(validFromDayParam);
+                cmd.Parameters.Add(validFromMonthParam);
+                cmd.Parameters.Add(validFromYearParam);
+                cmd.Parameters.Add(validToDayParam);
+                cmd.Parameters.Add(validToMonthParam);
+                cmd.Parameters.Add(validToYearParam);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+                offer.OfferID = (int)offerIdParam.Value;
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to update offer with ID: " + offer.OfferID);
+            }
+            finally { conn.Close(); }
+        }
+        public bool DoesSimilarOfferExist(Offer offer)
+        {
+            bool exists = false;
+            try
+            {
+                SqlCommand cmd = new SqlCommand("CheckSimilarOfferExists", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
+                SqlParameter productIdParam = new SqlParameter("@product_id", offer.ProductID);
+                SqlParameter discountPercentageParam = new SqlParameter("@discount_percentage", offer.DiscountPercentage);
+                SqlParameter validFromDayParam = new SqlParameter("@valid_from_day", offer.ValidFromDay);
+                SqlParameter validFromMonthParam = new SqlParameter("@valid_from_month", offer.ValidFromMonth);
+                SqlParameter validFromYearParam = new SqlParameter("@valid_from_year", offer.ValidFromYear);
+                SqlParameter validToDayParam = new SqlParameter("@valid_to_day", offer.ValidToDay);
+                SqlParameter validToMonthParam = new SqlParameter("@valid_to_month", offer.ValidToMonth);
+                SqlParameter validToYearParam = new SqlParameter("@valid_to_year", offer.ValidToYear);
+
+                cmd.Parameters.Add(reasonParam);
+                cmd.Parameters.Add(productIdParam);
+                cmd.Parameters.Add(discountPercentageParam);
+                cmd.Parameters.Add(validFromDayParam);
+                cmd.Parameters.Add(validFromMonthParam);
+                cmd.Parameters.Add(validFromYearParam);
+                cmd.Parameters.Add(validToDayParam);
+                cmd.Parameters.Add(validToMonthParam);
+                cmd.Parameters.Add(validToYearParam);
+
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                exists = reader.HasRows;
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to check for similar offer");
+            }
+            finally { conn.Close(); }
+
+            return exists;
+        }
     }
 
 }

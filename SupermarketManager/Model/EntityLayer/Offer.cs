@@ -52,26 +52,67 @@ namespace SupermarketManager.Model.EntityLayer
             }
         }
 
-        private DateTime validFromDate;
-        public DateTime ValidFromDate
+        private int? validFromDay;
+        public int? ValidFromDay
         {
-            get { return validFromDate; }
+            get { return validFromDay; }
             set
             {
-                validFromDate = value;
-                NotifyPropertyChanged("ValidFromDate");
+                validFromDay = value;
+                NotifyPropertyChanged("ValidFromDay");
+            }
+        }
+        private int? validFromMonth;
+        public int? ValidFromMonth
+        {
+            get { return validFromMonth; }
+            set
+            {
+                validFromMonth = value;
+                NotifyPropertyChanged("ValidFromMonth");
+            }
+        }
+        private int? validFromYear;
+        public int? ValidFromYear
+        {
+            get { return validFromMonth; }
+            set
+            {
+                validFromMonth = value;
+                NotifyPropertyChanged("ValidFromYear");
             }
         }
 
-        private DateTime validToDate;
-        public DateTime ValidToDate
+        private int? validToDay;
+        public int? ValidToDay
         {
-            get { return validToDate; }
+            get { return validToDay; }
             set
             {
-                validToDate = value;
-                NotifyPropertyChanged("ValidToDate");
+                validToDay = value;
+                NotifyPropertyChanged("ValidToDay");
             }
         }
+        private int? validToMonth;
+        public int? ValidToMonth
+        {
+            get { return validToMonth; }
+            set
+            {
+                validToMonth = value;
+                NotifyPropertyChanged("ValidToMonth");
+            }
+        }
+        private int? validToYear;
+        public int? ValidToYear
+        {
+            get { return validToMonth; }
+            set
+            {
+                validToMonth = value;
+                NotifyPropertyChanged("ValidToYear");
+            }
+        }
+
     }
 }
