@@ -356,6 +356,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 while (reader.Read())
                 {
                     Product product = new Product();
+                    product.ProductName = reader.GetString(0);
                     product.ProductId = reader.GetInt32(0);
                     product.Barcode = reader.GetInt32(1);
                     product.CategoryID = reader.GetInt32(2);
@@ -385,6 +386,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 while (reader.Read())
                 {
                     Product product = new Product();
+                    product.ProductName = reader.GetString(0);
                     product.ProductId = reader.GetInt32(0);
                     product.Barcode = reader.GetInt32(1);
                     product.CategoryID = reader.GetInt32(2);
@@ -405,10 +407,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                 SqlParameter productIdParam = new SqlParameter("@product_id", product.ProductId);
+                SqlParameter productNameParam = new SqlParameter("@product_name", product.ProductName);
                 SqlParameter barcodeParam = new SqlParameter("@barcode", product.Barcode);
                 SqlParameter categoryIdParam = new SqlParameter("@category_id", product.CategoryID);
                 SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", product.ManufacturerID);
 
+                cmd.Parameters.Add(productNameParam);
                 cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(barcodeParam);
                 cmd.Parameters.Add(categoryIdParam);
@@ -452,10 +456,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter productIdParam = new SqlParameter("@product_id", product.ProductId);
+                SqlParameter productNameParam = new SqlParameter("@product_name", product.ProductName);
                 SqlParameter barcodeParam = new SqlParameter("@barcode", product.Barcode);
                 SqlParameter categoryIdParam = new SqlParameter("@category_id", product.CategoryID);
                 SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", product.ManufacturerID);
 
+                cmd.Parameters.Add(productNameParam);
                 cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(barcodeParam);
                 cmd.Parameters.Add(categoryIdParam);
@@ -950,6 +956,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 if (reader.Read())
                 {
                     Product product = new Product();
+                    product.ProductName = reader.GetString(0);
                     product.ProductId = reader.GetInt32(0);
                     product.Barcode = reader.GetInt32(1);
                     product.CategoryID = reader.GetInt32(2);

@@ -18,6 +18,14 @@ namespace SupermarketManager.Model.EntityLayer
                 NotifyPropertyChanged("ProductID");
             }
         }
+        private string productName;
+        public string ProductName
+        {
+            get { return productName; }
+            set { productName = value;
+                NotifyPropertyChanged("ProductName");
+            }
+        }
 
         private int? barcode;
         public int? Barcode
