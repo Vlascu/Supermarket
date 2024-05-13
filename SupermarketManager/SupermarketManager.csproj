@@ -80,10 +80,11 @@
     <Compile Include="Model\EntityLayer\Receipt.cs" />
     <Compile Include="Model\EntityLayer\Receipt_Product.cs" />
     <Compile Include="Model\EntityLayer\User.cs" />
-    <Compile Include="Utils\DailyRevenue.cs" />
+    <Compile Include="Utils\DataModels\DailyRevenue.cs" />
+    <Compile Include="Utils\Enums\OfferTypes.cs" />
     <Compile Include="Utils\Exceptions\SqlOperationException.cs" />
-    <Compile Include="Utils\MarkupCategorySelector.cs" />
-    <Compile Include="Utils\OfferManager.cs" />
+    <Compile Include="Utils\Managers\MarkupManager.cs" />
+    <Compile Include="Utils\Managers\OfferManager.cs" />
     <Compile Include="Utils\Enums\OperationsType.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

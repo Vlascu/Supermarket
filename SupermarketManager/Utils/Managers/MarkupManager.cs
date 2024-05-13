@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SupermarketManager.Utils
 {
-    public class MarkupCategorySelector
+    public class MarkupManager
     {
         public static int GetMarkupCategory(decimal price)
         {

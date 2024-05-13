@@ -31,7 +31,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             decimal pricePerProduct = purchasePrice / quantity;
-            int markupPercentage = _administratorDAL.GetMarkupByCategory(MarkupCategorySelector.GetMarkupCategory(pricePerProduct));
+            int markupPercentage = _administratorDAL.GetMarkupByCategory(MarkupManager.GetMarkupCategory(pricePerProduct));
             decimal markupProductPrice = pricePerProduct + (markupPercentage * pricePerProduct) / 100;
             decimal stockMarkupPrice = markupProductPrice * quantity;
 
