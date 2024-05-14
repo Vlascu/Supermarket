@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -68,9 +71,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\BusinessLogicLayer\AdministratorBLL.cs" />
+    <Compile Include="Model\BusinessLogicLayer\AuthBLL.cs" />
+    <Compile Include="Model\BusinessLogicLayer\CashierBLL.cs" />
     <Compile Include="Model\DataAccessLayer\AdministratorDAL.cs" />
+    <Compile Include="Model\DataAccessLayer\AuthDAL.cs" />
     <Compile Include="Model\DataAccessLayer\CashierDAL.cs" />
     <Compile Include="Model\DataAccessLayer\DALUtil.cs" />
+    <Compile Include="Model\DataAccessLayer\JsonPersistence.cs" />
     <Compile Include="Model\EntityLayer\BasePropertyChanged.cs" />
     <Compile Include="Model\EntityLayer\Manufacturer.cs" />
     <Compile Include="Model\EntityLayer\Markup.cs" />
@@ -88,7 +95,7 @@
     <Compile Include="Utils\Managers\MarkupManager.cs" />
     <Compile Include="Utils\Managers\OfferManager.cs" />
     <Compile Include="Utils\Enums\OperationsType.cs" />
-    <Compile Include="Utils\Managers\StockValadityManager.cs" />
+    <Compile Include="Utils\Managers\StockValidityManager.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -48,7 +48,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             finally { conn.Close(); }
 
         }
-
         public void AddUser(User user)
         {
             try
@@ -81,7 +80,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
 
         }
-
         public void DeleteUser(User user)
         {
             try
@@ -100,7 +98,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateUser(User user)
         {
             try
@@ -150,7 +147,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void AddProductCategory(ProductCategory category)
         {
             try
@@ -174,7 +170,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void DeleteProductCategory(ProductCategory category)
         {
             try
@@ -194,7 +189,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateProductCategory(ProductCategory category)
         {
             try
@@ -244,7 +238,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void AddManufacturer(Manufacturer manufacturer)
         {
             try
@@ -270,7 +263,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void DeleteManufacturer(Manufacturer manufacturer)
         {
             try
@@ -292,7 +284,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateManufacturer(Manufacturer manufacturer)
         {
             try
@@ -346,7 +337,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public ObservableCollection<Product> GetAllProducts()
         {
             try
@@ -375,7 +365,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public ObservableCollection<Product> GetProductsByManufacturer(Manufacturer manufacturer)
         {
             try
@@ -434,7 +423,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void DeleteProduct(Product product)
         {
             try
@@ -454,7 +442,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateProduct(Product product)
         {
             try
@@ -484,7 +471,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public ObservableCollection<ProductStock> GetAllProductStocks()
         {
             try
@@ -520,7 +506,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void AddProductStock(ProductStock productStock)
         {
             try
@@ -566,7 +551,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void DeleteProductStock(ProductStock productStock)
         {
             try
@@ -586,7 +570,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateProductStock(ProductStock productStock)
         {
             try
@@ -594,7 +577,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateProductStock", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                 SqlParameter stockId = new SqlParameter("@stock_id", productStock.ProductStockID) { Direction = ParameterDirection.Output };
+                SqlParameter stockId = new SqlParameter("@stock_id", productStock.ProductStockID) { Direction = ParameterDirection.Output };
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
@@ -765,7 +748,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void AddMarkup(Markup markup)
         {
             try
@@ -791,7 +773,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void DeleteMarkup(Markup markup)
         {
             try
@@ -811,7 +792,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public void UpdateMarkup(Markup markup)
         {
             try
@@ -952,7 +932,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-
         public Product GetHighestReceiptProduct(int day)
         {
             Receipt highestReceipt = GetHighestReceipt(day);

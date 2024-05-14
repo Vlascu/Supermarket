@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SupermarketManager.Utils.Managers
 {
-    public class StockValadityManager
+    public class StockValidityManager
     {
         public static bool CheckStocks()
         {

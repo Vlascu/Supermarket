@@ -2,12 +2,14 @@
 using SupermarketManager.Model.EntityLayer;
 using SupermarketManager.Utils;
 using SupermarketManager.Utils.Enums;
+using SupermarketManager.Utils.Managers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SupermarketManager.Model.BusinessLogicLayer
 {
@@ -323,6 +325,43 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             offer.ValidToYear = stock.YearOfExpiration;
 
             return offer;
+        }
+        public bool CheckStocks()
+        {
+            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\Resources\\stock_check.json");
+
+            CustomDate currentDate = new CustomDate();
+            currentDate.Day = DateTime.Now.Day;
+            currentDate.Month = DateTime.Now.Month;
+            currentDate.Year = DateTime.Now.Year;
+
+            if (customDates == null || customDates.Count == 0)
+            {
+               JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+               return StockValidityManager.CheckStocks();
+            }
+            else
+            {
+                CustomDate lastCheck = customDates.Last();
+               
+
+                if (lastCheck.Year < DateTime.Now.Year)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+                else if (lastCheck.Month < DateTime.Now.Month)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+                else if (lastCheck.Day < DateTime.Now.Day)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+            }
+            return false;
         }
     }
 }
