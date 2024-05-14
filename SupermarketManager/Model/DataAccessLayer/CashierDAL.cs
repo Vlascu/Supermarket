@@ -83,27 +83,54 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 while (reader.Read())
                 {
-                    ProductStock productStock = new ProductStock();
-
-                    productStock.ProductStockID = reader.GetInt32(0);
-                    productStock.ProductID = reader.GetInt32(1);
-                    productStock.Quantity = reader.GetInt32(2);
-                    productStock.UnitOfMeasure = reader.GetString(2);
-                    productStock.DayOfSupply = reader.GetInt32(3);
-                    productStock.MonthOfSupply = reader.GetInt32(4);
-                    productStock.YearOfSupply = reader.GetInt32(5);
-                    productStock.DayOfExpiration = reader.GetInt32(6);
-                    productStock.MonthOfExpiration = reader.GetInt32(6);
-                    productStock.YearOfExpiration = reader.GetInt32(7);
-                    productStock.PurchasePrice = reader.GetDecimal(5);
-                    productStock.SalePrice = reader.GetDecimal(6);
-
-                    stocks.Add(productStock);
+                    stocks.Add(BuildProductStockFromReader(reader));
                 }
 
                 foreach (ProductStock productStock in stocks)
                 {
                     decimal priceOnReceipt = (decimal)(wantedQuantity * productStock.PricePerProduct);
+
+                    if (productStock.Quantity - wantedQuantity < 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return priceOnReceipt;
+                    }
+                }
+                throw new SqlOperationException("Insuffiecient stocks of product " + productName);
+            }
+            catch (Exception ex)
+            {
+                throw new SqlOperationException("Something went wrong when trying to get receipt price of product " + productName);
+            }
+            finally { conn.Close(); }
+        }
+        public void SellProduct(int productId, string productName, int wantedQuantity)
+        {
+            try
+            {
+                SortedSet<ProductStock> stocks = new SortedSet<ProductStock>(new ProductStockSorter());
+
+                SqlCommand cmd = new SqlCommand("SellProduct", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter productIdParam = new SqlParameter("@product_id", productId);
+
+                cmd.Parameters.Add(productIdParam);
+
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    stocks.Add(BuildProductStockFromReader(reader));
+                }
+
+                foreach (ProductStock productStock in stocks)
+                {
 
                     if (productStock.Quantity - wantedQuantity > 0)
                     {
@@ -111,7 +138,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                         UpdateProductStock(productStock);
 
-                        return priceOnReceipt;
+                        break;
                     }
                     else if (productStock.Quantity - wantedQuantity == 0)
                     {
@@ -119,7 +146,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                         DeleteProductStock(productStock);
 
-                        return priceOnReceipt;
+                        break;
                     }
                 }
                 throw new SqlOperationException("Insuffiecient stocks of product " + productName);
@@ -193,6 +220,26 @@ namespace SupermarketManager.Model.DataAccessLayer
                 throw new SqlOperationException(e.Message + " when trying to delete product stock with ID " + productStock.ProductStockID);
             }
             finally { conn.Close(); }
+        }
+
+        private ProductStock BuildProductStockFromReader(SqlDataReader reader)
+        {
+            ProductStock productStock = new ProductStock();
+
+            productStock.ProductStockID = reader.GetInt32(0);
+            productStock.ProductID = reader.GetInt32(1);
+            productStock.Quantity = reader.GetInt32(2);
+            productStock.UnitOfMeasure = reader.GetString(2);
+            productStock.DayOfSupply = reader.GetInt32(3);
+            productStock.MonthOfSupply = reader.GetInt32(4);
+            productStock.YearOfSupply = reader.GetInt32(5);
+            productStock.DayOfExpiration = reader.GetInt32(6);
+            productStock.MonthOfExpiration = reader.GetInt32(6);
+            productStock.YearOfExpiration = reader.GetInt32(7);
+            productStock.PurchasePrice = reader.GetDecimal(5);
+            productStock.SalePrice = reader.GetDecimal(6);
+
+            return productStock;
         }
 
     }

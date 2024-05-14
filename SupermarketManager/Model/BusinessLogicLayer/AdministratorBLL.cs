@@ -13,11 +13,11 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 {
     public class AdministratorBLL
     {
-        private readonly AdministratorDAL _administratorDAL;
+        private readonly AdministratorDAL administratorDAL;
 
         public AdministratorBLL()
         {
-            _administratorDAL = new AdministratorDAL();
+            administratorDAL = new AdministratorDAL();
         }
         public void ProductStockOperation(decimal purchasePrice, int quantity, string unitOfMeasure, DateTime experationDate, int productId, OperationsType opType = OperationsType.Insert)
         {
@@ -31,7 +31,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             decimal pricePerProduct = purchasePrice / quantity;
-            int markupPercentage = _administratorDAL.GetMarkupByCategory(MarkupManager.GetMarkupCategory(pricePerProduct));
+            int markupPercentage = administratorDAL.GetMarkupByCategory(MarkupManager.GetMarkupCategory(pricePerProduct));
             decimal markupProductPrice = pricePerProduct + (markupPercentage * pricePerProduct) / 100;
             decimal stockMarkupPrice = markupProductPrice * quantity;
 
@@ -50,22 +50,22 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             if (opType == OperationsType.Insert)
             {
-                _administratorDAL.AddProductStock(stock);
+                administratorDAL.AddProductStock(stock);
             }
             else if (opType == OperationsType.Update)
             {
-                _administratorDAL.UpdateProductStock(stock);
+                administratorDAL.UpdateProductStock(stock);
             }
             else if (opType == OperationsType.Delete)
             {
-                stock.ProductStockID = _administratorDAL.GetStockId(stock);
-                _administratorDAL.DeleteProductStock(stock);
+                stock.ProductStockID = administratorDAL.GetStockId(stock);
+                administratorDAL.DeleteProductStock(stock);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the stock."); }
         }
         public ObservableCollection<ProductStock> GetAllProductStocks()
         {
-            return _administratorDAL.GetAllProductStocks();
+            return administratorDAL.GetAllProductStocks();
         }
         public void ModifyPurchasePriceOfStock(decimal purchasePrice, int quantity, string unitOfMeasure, DateTime experationDate, int productId, decimal newSalePrice)
         {
@@ -90,11 +90,11 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.MonthOfSupply = DateTime.Now.Month;
             stock.YearOfSupply = DateTime.Now.Year;
             stock.ProductID = productId;
-            stock.ProductStockID = _administratorDAL.GetStockId(stock);
+            stock.ProductStockID = administratorDAL.GetStockId(stock);
 
-            if (newSalePrice >= _administratorDAL.GetStockPurchasePrice(stock))
+            if (newSalePrice >= administratorDAL.GetStockPurchasePrice(stock))
             {
-                _administratorDAL.UpdateProductStock(stock);
+                administratorDAL.UpdateProductStock(stock);
             }
             else
             {
@@ -118,25 +118,25 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             if (opType == OperationsType.Insert)
             {
-                _administratorDAL.AddManufacturer(manufacturer);
+                administratorDAL.AddManufacturer(manufacturer);
             }
             else if (opType == OperationsType.Update)
             {
-                _administratorDAL.UpdateManufacturer(manufacturer);
+                administratorDAL.UpdateManufacturer(manufacturer);
             }
             else if (opType == OperationsType.Delete)
             {
-                _administratorDAL.DeleteManufacturer(manufacturer);
+                administratorDAL.DeleteManufacturer(manufacturer);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the manufacturer."); }
         }
         public ObservableCollection<Manufacturer> GetAllManufacturers()
         {
-            return _administratorDAL.GetAllManufacturers();
+            return administratorDAL.GetAllManufacturers();
         }
         public ObservableCollection<User> GetAllUsers()
         {
-            return _administratorDAL.GetAllUsers();
+            return administratorDAL.GetAllUsers();
         }
         public void CategoryOperation(string categoryName, OperationsType opType = OperationsType.Insert)
         {
@@ -150,27 +150,35 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             if (opType == OperationsType.Insert)
             {
-                _administratorDAL.AddProductCategory(category);
+                administratorDAL.AddProductCategory(category);
             }
             else if (opType == OperationsType.Update)
             {
-                _administratorDAL.UpdateProductCategory(category);
+                administratorDAL.UpdateProductCategory(category);
             }
             else if (opType == OperationsType.Delete)
             {
-                _administratorDAL.DeleteProductCategory(category);
+                administratorDAL.DeleteProductCategory(category);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the category."); }
         }
         public ObservableCollection<ProductCategory> GetAllCategories()
         {
-            return _administratorDAL.GetAllProductCategories();
+            return administratorDAL.GetAllProductCategories();
         }
         public void ProductOperation(int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
         {
             if (barcode <= 0)
             {
-                throw new ArgumentException("A product shouldn't have it's barcode smaller then 0.");
+                throw new ArgumentException("A product shouldn't have it's barcode smaller than 0.");
+            }
+            if (manufacturerID <= 0)
+            {
+                throw new ArgumentException("No manufacturer selected.");
+            }
+            if (categoryID <= 0)
+            {
+                throw new ArgumentException("No category selected.");
             }
 
             Product product = new Product();
@@ -180,21 +188,21 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             if (opType == OperationsType.Insert)
             {
-                _administratorDAL.AddProduct(product);
+                administratorDAL.AddProduct(product);
             }
             else if (opType == OperationsType.Update)
             {
-                _administratorDAL.UpdateProduct(product);
+                administratorDAL.UpdateProduct(product);
             }
             else if (opType == OperationsType.Delete)
             {
-                _administratorDAL.DeleteProduct(product);
+                administratorDAL.DeleteProduct(product);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the product."); }
         }
         public ObservableCollection<Product> GetAllProducts()
         {
-            return _administratorDAL.GetAllProducts();
+            return administratorDAL.GetAllProducts();
         }
         public ObservableCollection<Product> GetProductsByManufacturer(Manufacturer manufacturer)
         {
@@ -203,13 +211,13 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             if (manufacturer.CountryOfOrigin == null || manufacturer.CountryOfOrigin.Length == 0)
             { throw new ArgumentException("Manufacturer with null or empty country of origin."); }
 
-            return _administratorDAL.GetProductsByManufacturer(manufacturer);
+            return administratorDAL.GetProductsByManufacturer(manufacturer);
         }
         public decimal GetTotalSalePriceOfCategory(string categoryName)
         {
             if (categoryName == null || categoryName.Length == 0) { throw new ArgumentException("Category name null or empty."); }
 
-            return _administratorDAL.GetTotalSalePriceOfCategory(categoryName);
+            return administratorDAL.GetTotalSalePriceOfCategory(categoryName);
         }
 
         public ObservableCollection<DailyRevenue> GetDailyRevenueByMonthAndCashier(string cashierName, string month)
@@ -223,7 +231,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 throw new ArgumentException("Selected month must have a name.");
             }
 
-            return _administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month);
+            return administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month);
         }
         public Product GetHighestReceiptProduct(int day)
         {
@@ -232,13 +240,13 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 throw new ArgumentException("Can't have day 0.");
             }
 
-            return _administratorDAL.GetHighestReceiptProduct(day);
+            return administratorDAL.GetHighestReceiptProduct(day);
         }
         public bool ApplyOfferToAllStocks()
         {
             int offersApplied = 0;
 
-            ObservableCollection<ProductStock> stocks = _administratorDAL.GetAllProductStocks();
+            ObservableCollection<ProductStock> stocks = administratorDAL.GetAllProductStocks();
 
             foreach (ProductStock stock in stocks)
             {
@@ -250,7 +258,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     offerPercentage = OfferManager.GetOfferPercentageByExpiration((int)(stock.DayOfExpiration - DateTime.Now.Day));
                     stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
 
-                    _administratorDAL.UpdateProductStock(stock);
+                    administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Expiration", stock);
 
@@ -263,7 +271,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     offerPercentage = OfferManager.GetOfferPercentageByLiquidation();
                     stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
 
-                    _administratorDAL.UpdateProductStock(stock);
+                    administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Liquidation", stock);
 
@@ -275,7 +283,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     offerPercentage = Math.Max(OfferManager.GetOfferPercentageByLiquidation(), OfferManager.GetOfferPercentageByExpiration((int)(stock.DayOfExpiration - DateTime.Now.Day)));
                     stock.SalePrice = stock.SalePrice - (stock.SalePrice * offerPercentage) / 100;
 
-                    _administratorDAL.UpdateProductStock(stock);
+                    administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Liquidation", stock);
 
@@ -291,13 +299,13 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         }
         private void CheckAndAddOffer(Offer offer)
         {
-            if (_administratorDAL.DoesSimilarOfferExist(offer))
+            if (administratorDAL.DoesSimilarOfferExist(offer))
             {
-                _administratorDAL.UpdateOffer(offer);
+                administratorDAL.UpdateOffer(offer);
             }
             else
             {
-                _administratorDAL.AddOffer(offer);
+                administratorDAL.AddOffer(offer);
             }
         }
         private Offer AddOfferProperties(string reason, ProductStock stock)
