@@ -531,6 +531,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter stockId = new SqlParameter("@stock_id", productStock.ProductStockID) { Direction = ParameterDirection.Output };
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
+                SqlParameter pricePerProduct = new SqlParameter("@price_per_product", productStock.SalePrice / productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
                 SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
                 SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
@@ -544,6 +545,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 cmd.Parameters.Add(stockProductID);
                 cmd.Parameters.Add(quantityParam);
+                cmd.Parameters.Add(pricePerProduct);
                 cmd.Parameters.Add(unitOfMeasureParam);
                 cmd.Parameters.Add(supplyDayParam);
                 cmd.Parameters.Add(supplyMonthParam);

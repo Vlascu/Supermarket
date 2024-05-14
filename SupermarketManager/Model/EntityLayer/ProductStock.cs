@@ -22,7 +22,7 @@ namespace SupermarketManager.Model.EntityLayer
         private int? productID;
         public int? ProductID
         {
-            get { return  productID; }
+            get { return productID; }
             set
             {
                 productID = value;
@@ -137,6 +137,17 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 salePrice = value;
                 NotifyPropertyChanged("SalePrice");
+            }
+        }
+
+        private decimal pricePerProduct;
+        public decimal PricePerProduct
+        {
+            get { return pricePerProduct; }
+            set
+            {
+                pricePerProduct = value;
+                NotifyPropertyChanged("PricePerProduct");
             }
         }
     }
