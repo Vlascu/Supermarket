@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Model\BusinessLogicLayer\AdministratorBLL.cs" />
     <Compile Include="Model\DataAccessLayer\AdministratorDAL.cs" />
+    <Compile Include="Model\DataAccessLayer\CashierDAL.cs" />
     <Compile Include="Model\DataAccessLayer\DALUtil.cs" />
     <Compile Include="Model\EntityLayer\BasePropertyChanged.cs" />
     <Compile Include="Model\EntityLayer\Manufacturer.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Model\EntityLayer\Receipt_Product.cs" />
     <Compile Include="Model\EntityLayer\User.cs" />
     <Compile Include="Utils\DataModels\DailyRevenue.cs" />
+    <Compile Include="Utils\DataModels\ProductStockSorter.cs" />
     <Compile Include="Utils\Enums\OfferTypes.cs" />
     <Compile Include="Utils\Exceptions\SqlOperationException.cs" />
     <Compile Include="Utils\Managers\MarkupManager.cs" />

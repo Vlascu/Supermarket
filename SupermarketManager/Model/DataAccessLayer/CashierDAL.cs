@@ -1,4 +1,5 @@
 ﻿using SupermarketManager.Model.EntityLayer;
+using SupermarketManager.Utils.DataModels;
 using SupermarketManager.Utils.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,9 @@ namespace SupermarketManager.Model.DataAccessLayer
         {
             try
             {
-                SqlCommand cmd = new SqlCommand("GetStockOfProduct", conn);
+                SortedSet<ProductStock> stocks = new SortedSet<ProductStock>(new ProductStockSorter());
+
+                SqlCommand cmd = new SqlCommand("GetStocksOfProduct", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter productIdParam = new SqlParameter("@product_id", productId);
@@ -78,7 +81,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
+                while (reader.Read())
                 {
                     ProductStock productStock = new ProductStock();
 
@@ -95,6 +98,11 @@ namespace SupermarketManager.Model.DataAccessLayer
                     productStock.PurchasePrice = reader.GetDecimal(5);
                     productStock.SalePrice = reader.GetDecimal(6);
 
+                    stocks.Add(productStock);
+                }
+
+                foreach (ProductStock productStock in stocks)
+                {
                     decimal priceOnReceipt = (decimal)(wantedQuantity * productStock.PricePerProduct);
 
                     if (productStock.Quantity - wantedQuantity > 0)
@@ -113,16 +121,8 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                         return priceOnReceipt;
                     }
-                    else
-                    {
-                        throw new SqlOperationException("Insuffiecient quantity of product " + productName + ", only " + productStock.Quantity + " left.");
-                    }
                 }
-                else
-                {
-                    throw new SqlOperationException("Product stock of product " + productName + " not found.");
-                }
-
+                throw new SqlOperationException("Insuffiecient stocks of product " + productName);
             }
             catch (Exception ex)
             {
