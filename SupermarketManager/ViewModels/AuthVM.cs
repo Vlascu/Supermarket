@@ -2,6 +2,7 @@
 using SupermarketManager.Model.BusinessLogicLayer;
 using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Utils.Managers;
+using SupermarketManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,17 @@ namespace SupermarketManager.ViewModels
         private string username;
         private string password;
         private string userType;
+        private readonly Window currentWindow;
 
         private ICommand registerCommand;
+        private ICommand goToLoginCommand;
+        private ICommand loginCommand;
+        private ICommand goToRegisterCommand;
 
-        public AuthVM()
+        public AuthVM(Window window)
         {
             authBLL = new AuthBLL(new AuthDAL());
+            this.currentWindow = window;
         }
 
         public ICommand RegisterCommand
@@ -39,6 +45,48 @@ namespace SupermarketManager.ViewModels
             set { registerCommand = value; }
         }
 
+        public ICommand GoToLoginCommand
+        {
+            get
+            {
+                if (goToLoginCommand == null)
+                {
+                    goToLoginCommand = new ParameterlessRelayCommand(GoToLogin, param => true);
+                }
+                return goToLoginCommand;
+            }
+            set
+            {
+                goToLoginCommand = value;
+            }
+        }
+        public ICommand GoToRegisterCommand
+        {
+            get
+            {
+                if (goToRegisterCommand == null)
+                {
+                    goToRegisterCommand = new ParameterlessRelayCommand(GoToRegister, param => true);
+                }
+                return goToRegisterCommand;
+            }
+            set
+            {
+                goToRegisterCommand = value;
+            }
+        }
+        public ICommand LoginCommand
+        {
+            get
+            {
+                if (loginCommand == null)
+                {
+                    loginCommand = new ParameterlessRelayCommand(LoginUser, param => true);
+                }
+                return loginCommand;
+            }
+            set => loginCommand = value;
+        }
         public string Username
         {
             get { return username; }
@@ -75,16 +123,50 @@ namespace SupermarketManager.ViewModels
 
         private void RegisterUser()
         {
-           try
+            try
             {
-                if(authBLL.Register(Username,Password,UserType))
+                if (authBLL.Register(Username, Password, UserType))
                 {
                     MessageBox.Show("User registerd succesfully.");
-                } else
+                }
+                else
                 {
                     MessageBox.Show("User already exists.");
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void GoToLogin()
+        {
+            Login login = new Login();
+            currentWindow.Close();
+            login.ShowDialog();
+        }
+
+        private void GoToRegister()
+        {
+            MainWindow window = new MainWindow();
+            currentWindow.Close();
+            window.ShowDialog();
+        }
+
+        private void LoginUser()
+        {
+            try
+            {
+                if (authBLL.Login(Username, Password))
+                {
+                    MessageBox.Show("Login succesfully.");
+                }
+                else
+                {
+                    MessageBox.Show("User not found.");
+                }
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
