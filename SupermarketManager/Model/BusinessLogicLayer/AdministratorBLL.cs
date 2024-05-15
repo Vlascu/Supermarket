@@ -17,9 +17,9 @@ namespace SupermarketManager.Model.BusinessLogicLayer
     {
         private readonly AdministratorDAL administratorDAL;
 
-        public AdministratorBLL()
+        public AdministratorBLL(AdministratorDAL administratorDAL)
         {
-            administratorDAL = new AdministratorDAL();
+            this.administratorDAL = administratorDAL;
         }
         public void ProductStockOperation(decimal purchasePrice, int quantity, string unitOfMeasure, DateTime experationDate, int productId, OperationsType opType = OperationsType.Insert)
         {
@@ -299,6 +299,43 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
             return false;
         }
+        public bool CheckStocks()
+        {
+            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\Resources\\stock_check.json");
+
+            CustomDate currentDate = new CustomDate();
+            currentDate.Day = DateTime.Now.Day;
+            currentDate.Month = DateTime.Now.Month;
+            currentDate.Year = DateTime.Now.Year;
+
+            if (customDates == null || customDates.Count == 0)
+            {
+                JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                return StockValidityManager.CheckStocks();
+            }
+            else
+            {
+                CustomDate lastCheck = customDates.Last();
+
+                if (lastCheck.Year < DateTime.Now.Year)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+                else if (lastCheck.Month < DateTime.Now.Month)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+                else if (lastCheck.Day < DateTime.Now.Day)
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    return StockValidityManager.CheckStocks();
+                }
+            }
+            return false;
+        }
+
         private void CheckAndAddOffer(Offer offer)
         {
             if (administratorDAL.DoesSimilarOfferExist(offer))
@@ -325,43 +362,6 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             offer.ValidToYear = stock.YearOfExpiration;
 
             return offer;
-        }
-        public bool CheckStocks()
-        {
-            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\Resources\\stock_check.json");
-
-            CustomDate currentDate = new CustomDate();
-            currentDate.Day = DateTime.Now.Day;
-            currentDate.Month = DateTime.Now.Month;
-            currentDate.Year = DateTime.Now.Year;
-
-            if (customDates == null || customDates.Count == 0)
-            {
-               JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
-               return StockValidityManager.CheckStocks();
-            }
-            else
-            {
-                CustomDate lastCheck = customDates.Last();
-               
-
-                if (lastCheck.Year < DateTime.Now.Year)
-                {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
-                    return StockValidityManager.CheckStocks();
-                }
-                else if (lastCheck.Month < DateTime.Now.Month)
-                {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
-                    return StockValidityManager.CheckStocks();
-                }
-                else if (lastCheck.Day < DateTime.Now.Day)
-                {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
-                    return StockValidityManager.CheckStocks();
-                }
-            }
-            return false;
         }
     }
 }

@@ -12,8 +12,7 @@ namespace SupermarketManager.Utils.Managers
     {
         public static bool CheckStocks()
         {
-            // TODO: json system to store when the last check was done, so it only call this method once per day
-
+        
             int stocksDeleted = 0;
 
             AdministratorDAL administratorDAL = new AdministratorDAL();

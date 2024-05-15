@@ -10,7 +10,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 {
     public static class DALUtil
     {
-        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["myConStr"].ConnectionString;
+        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString;
 
         public static SqlConnection Connection
         {

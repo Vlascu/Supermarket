@@ -19,21 +19,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             this.authDAL = authDAL;
         }
 
-        public bool Register(string username, string password)
-        {
-            InputValidation(username, password);
-
-            User user = new User();
-            user.Username = username;
-            user.Password = HashPassword(password);
-
-            if(authDAL.CheckUserExists(user))
-            {
-                return true;
-            }
-            return false;
-        }
-        public bool Login(string username, string password, string userType)
+        public bool Register(string username, string password, string userType)
         {
             InputValidation(username, password, userType);
 
@@ -42,11 +28,26 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             user.Password = HashPassword(password);
             user.UserType = userType;
 
+            if (!authDAL.CheckUserExists(user))
+            {
+                authDAL.AddUser(user);
+                return true;
+            }
+            return false;
+        }
+        public bool Login(string username, string password)
+        {
+            InputValidation(username, password);
+
+            User user = new User();
+            user.Username = username;
+            user.Password = HashPassword(password);
+           
             if (authDAL.CheckUserExists(user))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
 
         }
         private static void InputValidation(string username, string password)

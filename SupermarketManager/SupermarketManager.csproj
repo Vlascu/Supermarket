@@ -79,6 +79,7 @@
     <Compile Include="Model\DataAccessLayer\DALUtil.cs" />
     <Compile Include="Model\DataAccessLayer\JsonPersistence.cs" />
     <Compile Include="Model\EntityLayer\BasePropertyChanged.cs" />
+    <Compile Include="Model\EntityLayer\CustomDate.cs" />
     <Compile Include="Model\EntityLayer\Manufacturer.cs" />
     <Compile Include="Model\EntityLayer\Markup.cs" />
     <Compile Include="Model\EntityLayer\Offer.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="Model\EntityLayer\Receipt.cs" />
     <Compile Include="Model\EntityLayer\Receipt_Product.cs" />
     <Compile Include="Model\EntityLayer\User.cs" />
+    <Compile Include="Utils\Command\ParameterlessRelayComand.cs" />
+    <Compile Include="Utils\Command\RelayCommand.cs" />
     <Compile Include="Utils\DataModels\DailyRevenue.cs" />
     <Compile Include="Utils\DataModels\ProductStockSorter.cs" />
     <Compile Include="Utils\Enums\OfferTypes.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Utils\Managers\OfferManager.cs" />
     <Compile Include="Utils\Enums\OperationsType.cs" />
     <Compile Include="Utils\Managers\StockValidityManager.cs" />
+    <Compile Include="ViewModels\AuthVM.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -124,12 +128,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\stock_check.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

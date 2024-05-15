@@ -12,9 +12,9 @@ namespace SupermarketManager.Model.BusinessLogicLayer
     {
         private readonly CashierDAL cashierDAL;
 
-        public CashierBLL()
+        public CashierBLL(CashierDAL cashierDAL)
         {
-            cashierDAL = new CashierDAL();
+            this.cashierDAL = cashierDAL;
         }
 
         public Product GetProduct(string name, int barcode, int manufacturerId, int categoryId)

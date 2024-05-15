@@ -29,21 +29,17 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter usernameParam = new SqlParameter("@username", user.Username);
                 SqlParameter passwordParam = new SqlParameter("@password", user.Password);
                 SqlParameter typeParameter = new SqlParameter("@user_type", user.UserType);
-                SqlParameter userIdParam = new SqlParameter("@user_id", SqlDbType.Int);
-
-                userIdParam.Direction = ParameterDirection.Output;
-
+             
                 cmd.Parameters.Add(usernameParam);
                 cmd.Parameters.Add(passwordParam);
                 cmd.Parameters.Add(typeParameter);
-                cmd.Parameters.Add(userIdParam);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {
-                throw new SqlOperationException(e.Message + " when trying to add user with username + " + user.Username);
+                throw new SqlOperationException(e.Message + "When trying to add user with username " + user.Username);
             }
             finally
             {
@@ -56,7 +52,7 @@ namespace SupermarketManager.Model.DataAccessLayer
         {
             try
             {
-                SqlCommand cmd = new SqlCommand("AddUser", conn);
+                SqlCommand cmd = new SqlCommand("CheckUserExists", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                 SqlParameter usernameParam = new SqlParameter("@username", user.Username);
@@ -70,13 +66,22 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 if (reader.Read())
                 {
-                    return true;
+                    int count = reader.GetInt32(0);
+                    if (count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
                 }
                 return false;
             }
             catch (Exception e)
             {
-                throw new SqlOperationException(e.Message + " when trying to add user with username + " + user.Username);
+                throw new SqlOperationException(e.Message + "When trying to add user with username + " + user.Username);
             }
             finally
             {
