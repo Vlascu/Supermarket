@@ -36,9 +36,9 @@ namespace SupermarketManager.Model.DataAccessLayer
                 while (reader.Read())
                 {
                     User user = new User();
-                    user.Username = reader.GetString(1);
-                    user.Password = reader.GetString(2);
-                    user.UserType = reader.GetString(3);
+                    user.Username = reader.GetString(0);
+                    user.Password = reader.GetString(1);
+                    user.UserType = reader.GetString(2);
 
                     result.Add(user);
                 }
@@ -80,14 +80,14 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
 
         }
-        public void DeleteUser(User user)
+        public void DeleteUser(string username)
         {
             try
             {
                 SqlCommand cmd = new SqlCommand("DeleteUser", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter userUsername = new SqlParameter("@username", user.Username);
+                SqlParameter userUsername = new SqlParameter("@username", username);
                 cmd.Parameters.Add(userUsername);
 
                 conn.Open();
@@ -95,7 +95,7 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             catch (Exception e)
             {
-                throw new SqlOperationException(e.Message + " when trying to delete user with username " + user.Username);
+                throw new SqlOperationException(e.Message + " when trying to delete user with username " + username);
             }
             finally { conn.Close(); }
         }
@@ -1060,6 +1060,82 @@ namespace SupermarketManager.Model.DataAccessLayer
             finally { conn.Close(); }
 
             return exists;
+        }
+        public bool CheckManufacturerExistsById(int id)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("CheckManufacturerExistsById", conn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter manufacturerId = new SqlParameter("@manufacturer_id", id);
+               
+                cmd.Parameters.Add(manufacturerId);
+            
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int count = reader.GetInt32(0);
+                    if (count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + "When trying to check manufacturer with id " + id);
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+        public bool CheckCategoryExistsById(int id)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("CheckProductCategoryExistsById", conn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter categoryId = new SqlParameter("@username", id);
+
+                cmd.Parameters.Add(categoryId);
+          
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int count = reader.GetInt32(0);
+                    if (count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " When trying to check category with id  " + id);
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
     }
 

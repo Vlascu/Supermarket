@@ -4,6 +4,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DELETE FROM Users
-    WHERE Username = @username;
+    UPDATE Users
+	SET Deleted = 1
+	WHERE Username = @username;
 END

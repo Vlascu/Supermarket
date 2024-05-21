@@ -16,6 +16,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 productID = value;
                 NotifyPropertyChanged("ProductID");
+                NotifyPropertyChanged("Display");
             }
         }
         private string productName;
@@ -24,6 +25,7 @@ namespace SupermarketManager.Model.EntityLayer
             get { return productName; }
             set { productName = value;
                 NotifyPropertyChanged("ProductName");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -35,6 +37,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 barcode = value;
                 NotifyPropertyChanged("Barcode");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -46,6 +49,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 categoryID = value;
                 NotifyPropertyChanged("CategoryID");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -58,7 +62,12 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 manufacturerID = value;
                 NotifyPropertyChanged("ManufacturerID");
+                NotifyPropertyChanged("Display");
             }
+        }
+        public string Display
+        {
+            get { return $"(P_ID: {productID}) (M_ID: {ManufacturerID}) (C_ID: {CategoryID}) {ProductName} {Barcode} "; }
         }
     }
 }

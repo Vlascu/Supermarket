@@ -164,11 +164,15 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         {
             return administratorDAL.GetAllProductCategories();
         }
-        public void ProductOperation(int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
+        public void ProductOperation(string productName, int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
         {
+            if (productName == null || productName =="")
+            {
+                throw new ArgumentException("Null or empty product name");
+            }
             if (barcode <= 0)
             {
-                throw new ArgumentException("A product shouldn't have it's barcode smaller than 0.");
+                throw new ArgumentException("A product shouldn't have it's barcode smaller than or equal to 0.");
             }
             if (manufacturerID <= 0)
             {
@@ -180,16 +184,21 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             Product product = new Product();
+            product.ProductName = productName;
             product.Barcode = barcode;
             product.ManufacturerID = manufacturerID;
             product.CategoryID = categoryID;
 
             if (opType == OperationsType.Insert)
             {
+                CheckManufacturerAndCategoryExists(manufacturerID, categoryID);
+
                 administratorDAL.AddProduct(product);
             }
             else if (opType == OperationsType.Update)
             {
+                CheckManufacturerAndCategoryExists(manufacturerID, categoryID);
+
                 administratorDAL.UpdateProduct(product);
             }
             else if (opType == OperationsType.Delete)
@@ -358,6 +367,22 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             offer.ValidToYear = stock.YearOfExpiration;
 
             return offer;
+        }
+        public void DeleteUser(string username)
+        {
+            administratorDAL.DeleteUser(username);
+        }
+        private void CheckManufacturerAndCategoryExists(int manufacturerId, int categoryId)
+        {
+            if (!administratorDAL.CheckManufacturerExistsById(manufacturerId))
+            {
+                throw new ArgumentException("Manufacturer with id " + manufacturerId + " doesn't exists.");
+            }
+
+            if (!administratorDAL.CheckCategoryExistsById(categoryId))
+            {
+                throw new ArgumentException("Category with id " + categoryId + " doesn't exists.");
+            }
         }
     }
 }

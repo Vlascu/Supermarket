@@ -16,6 +16,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 username = value;
                 NotifyPropertyChanged("Username");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -38,7 +39,12 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 userType = value;
                 NotifyPropertyChanged("UserType");
+                NotifyPropertyChanged("Display");
             }
+        }
+        public string Display
+        {
+            get { return $"{Username} ({UserType})"; }
         }
     }
 }
