@@ -24,20 +24,20 @@
             </Grid.ColumnDefinitions>
 
             <Button Name="DeleteButton" Margin="10,50,10,0" Height="60" Content="Delete" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
-                    Command="{Binding }" Grid.Column="0"/>
+                    Command="{Binding DeleteProductCommand}" Grid.Column="0"/>
             <Button Name="AddButton" Margin="10,50,10,0" Height="60" Content="Add" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                     Command="{Binding AddCommand}" Grid.Column="1"/>
             <Button Name="UpdateButton" Margin="10,50,10,0" Height="60" Content="Update" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
-                    Command="{Binding }" Grid.Column="2"/>
+                    Command="{Binding UpdateCommand}" Grid.Column="2"/>
             <Button Name="BackButton" Margin="10,50,10,0" Height="60" Content="Back" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                     Command="{Binding GoBackFromSubmenuCommand}" Grid.Column="3"/>
         </Grid>
 
         <!-- ListBox -->
         <ListBox Name="ItemsListBox" Grid.Row="1" Margin="10"
-             ItemsSource="{Binding Users}"
+             ItemsSource="{Binding Products}"
              HorizontalContentAlignment="Center"
-             SelectedItem="{Binding SelectedUser}"
+             SelectedItem="{Binding SelectedProduct}"
              Width="700" Height="450">
             <ListBox.ItemTemplate>
                 <DataTemplate>
