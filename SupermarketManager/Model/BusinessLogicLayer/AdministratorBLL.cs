@@ -154,10 +154,6 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             {
                 administratorDAL.AddProductCategory(category);
             }
-            else if (opType == OperationsType.Update)
-            {
-                administratorDAL.UpdateProductCategory(category);
-            }
             else if (opType == OperationsType.Delete)
             {
                 administratorDAL.DeleteProductCategory(category);
@@ -301,7 +297,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         }
         public bool CheckStocks()
         {
-            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\Resources\\stock_check.json");
+            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\..\\Resources\\stock_check.json");
 
             CustomDate currentDate = new CustomDate();
             currentDate.Day = DateTime.Now.Day;
@@ -310,7 +306,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             if (customDates == null || customDates.Count == 0)
             {
-                JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                 return StockValidityManager.CheckStocks();
             }
             else
@@ -319,17 +315,17 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
                 if (lastCheck.Year < DateTime.Now.Year)
                 {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                     return StockValidityManager.CheckStocks();
                 }
                 else if (lastCheck.Month < DateTime.Now.Month)
                 {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                     return StockValidityManager.CheckStocks();
                 }
                 else if (lastCheck.Day < DateTime.Now.Day)
                 {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\Resources\\stock_check.json");
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                     return StockValidityManager.CheckStocks();
                 }
             }

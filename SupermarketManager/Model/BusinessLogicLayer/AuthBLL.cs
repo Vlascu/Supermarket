@@ -42,7 +42,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             User user = new User();
             user.Username = username;
             user.Password = HashPassword(password);
-           
+
             if (authDAL.CheckUserExists(user))
             {
                 return true;
@@ -71,7 +71,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             {
                 throw new ArgumentException("Null or empty password!");
             }
-            if(String.IsNullOrEmpty(userType))
+            if (String.IsNullOrEmpty(userType))
             {
                 throw new ArgumentException("Null or empty user type!");
             }
@@ -84,6 +84,18 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 byte[] hash = sha256.ComputeHash(bytes);
                 return Convert.ToBase64String(hash);
             }
+        }
+        public string GetUserType(string username, string password)
+        {
+            if (username == null || username == "" || password == null || password == "")
+            {
+                throw new ArgumentException("Null or empty password or username");
+            }
+            User user = new User();
+            user.Username = username;
+            user.Password = HashPassword(password);
+
+            return authDAL.GetUserType(user);
         }
     }
 }

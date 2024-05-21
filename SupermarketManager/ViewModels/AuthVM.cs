@@ -128,6 +128,11 @@ namespace SupermarketManager.ViewModels
                 if (authBLL.Register(Username, Password, UserType))
                 {
                     MessageBox.Show("User registerd succesfully.");
+
+                    if (UserType == "Admin")
+                    {
+                        GoToAdminMenu();
+                    }
                 }
                 else
                 {
@@ -160,6 +165,11 @@ namespace SupermarketManager.ViewModels
                 if (authBLL.Login(Username, Password))
                 {
                     MessageBox.Show("Login succesfully.");
+                    
+                    if(authBLL.GetUserType(username, password) == "Admin")
+                    {
+                        GoToAdminMenu();
+                    }
                 }
                 else
                 {
@@ -170,6 +180,12 @@ namespace SupermarketManager.ViewModels
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void GoToAdminMenu()
+        {
+            AdministratorMenu administratorMenu = new AdministratorMenu();
+            this.currentWindow.Close();
+            administratorMenu.ShowDialog();
         }
     }
 }

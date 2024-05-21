@@ -19,6 +19,8 @@ namespace SupermarketManager.Utils.Managers
 
             var stocks = administratorDAL.GetAllProductStocks();
 
+
+
             foreach (ProductStock stock in stocks)
             {
                 if (stock.YearOfExpiration < DateTime.Now.Year)

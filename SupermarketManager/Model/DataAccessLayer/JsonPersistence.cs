@@ -37,7 +37,7 @@ namespace SupermarketManager.Model.DataAccessLayer
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("File not found");
+                throw new FileNotFoundException(filePath + " file not found");
             }
 
             string json = File.ReadAllText(filePath);

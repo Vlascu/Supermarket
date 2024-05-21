@@ -89,6 +89,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 SqlParameter userUsername = new SqlParameter("@username", user.Username);
                 cmd.Parameters.Add(userUsername);
+
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -154,15 +155,12 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("AddProductCategory", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                SqlParameter categoryIdParam = new SqlParameter("@category_id", category.CategoryID) { Direction = ParameterDirection.Output };
                 SqlParameter categoryNameParam = new SqlParameter("@category_name", category.CategoryName);
 
-                cmd.Parameters.Add(categoryIdParam);
                 cmd.Parameters.Add(categoryNameParam);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                category.CategoryID = (int)categoryIdParam.Value;
             }
             catch (Exception e)
             {
@@ -177,8 +175,8 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("DeleteProductCategory", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter categoryIdParam = new SqlParameter("@category_id", category.CategoryID);
-                cmd.Parameters.Add(categoryIdParam);
+                SqlParameter categoryName = new SqlParameter("@category_name", category.CategoryName);
+                cmd.Parameters.Add(categoryName);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -186,29 +184,6 @@ namespace SupermarketManager.Model.DataAccessLayer
             catch (Exception e)
             {
                 throw new SqlOperationException(e.Message + " when trying to delete product category with ID " + category.CategoryID);
-            }
-            finally { conn.Close(); }
-        }
-        public void UpdateProductCategory(ProductCategory category)
-        {
-            try
-            {
-                SqlCommand cmd = new SqlCommand("UpdateProductCategory", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter categoryIdParam = new SqlParameter("@category_id", category.CategoryID) { Direction = ParameterDirection.Output };
-                SqlParameter categoryNameParam = new SqlParameter("@category_name", category.CategoryName);
-
-                cmd.Parameters.Add(categoryIdParam);
-                cmd.Parameters.Add(categoryNameParam);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                category.CategoryID = (int)categoryIdParam.Value;
-            }
-            catch (Exception e)
-            {
-                throw new SqlOperationException(e.Message + " when trying to update product category with ID " + category.CategoryID);
             }
             finally { conn.Close(); }
         }
@@ -245,17 +220,14 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("AddManufacturer", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", manufacturer.ManufacturerID) { Direction = ParameterDirection.Output };
                 SqlParameter nameParam = new SqlParameter("@name", manufacturer.Name);
                 SqlParameter countryOfOriginParam = new SqlParameter("@country_of_origin", manufacturer.CountryOfOrigin);
 
-                cmd.Parameters.Add(manufacturerIdParam);
                 cmd.Parameters.Add(nameParam);
                 cmd.Parameters.Add(countryOfOriginParam);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                manufacturer.ManufacturerID = (int)manufacturerIdParam.Value;
             }
             catch (Exception e)
             {
@@ -291,7 +263,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateManufacturer", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", manufacturer.ManufacturerID) { Direction = ParameterDirection.Output };
+                SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", manufacturer.ManufacturerID);
                 SqlParameter nameParam = new SqlParameter("@name", manufacturer.Name);
                 SqlParameter countryOfOriginParam = new SqlParameter("@country_of_origin", manufacturer.CountryOfOrigin);
 
@@ -301,7 +273,6 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                manufacturer.ManufacturerID = (int)manufacturerIdParam.Value;
             }
             catch (Exception e)
             {
@@ -401,21 +372,18 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("AddProduct", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                SqlParameter productIdParam = new SqlParameter("@product_id", product.ProductId) { Direction = ParameterDirection.Output };
                 SqlParameter productNameParam = new SqlParameter("@product_name", product.ProductName);
                 SqlParameter barcodeParam = new SqlParameter("@barcode", product.Barcode);
                 SqlParameter categoryIdParam = new SqlParameter("@category_id", product.CategoryID);
                 SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", product.ManufacturerID);
 
                 cmd.Parameters.Add(productNameParam);
-                cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(barcodeParam);
                 cmd.Parameters.Add(categoryIdParam);
                 cmd.Parameters.Add(manufacturerIdParam);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                product.ProductId = (int)productIdParam.Value;
             }
             catch (Exception e)
             {
@@ -449,21 +417,18 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateProduct", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter productIdParam = new SqlParameter("@product_id", product.ProductId) { Direction = ParameterDirection.Output };
                 SqlParameter productNameParam = new SqlParameter("@product_name", product.ProductName);
                 SqlParameter barcodeParam = new SqlParameter("@barcode", product.Barcode);
                 SqlParameter categoryIdParam = new SqlParameter("@category_id", product.CategoryID);
                 SqlParameter manufacturerIdParam = new SqlParameter("@manufacturer_id", product.ManufacturerID);
 
                 cmd.Parameters.Add(productNameParam);
-                cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(barcodeParam);
                 cmd.Parameters.Add(categoryIdParam);
                 cmd.Parameters.Add(manufacturerIdParam);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                product.ProductId = (int)productIdParam.Value;
             }
             catch (Exception e)
             {
@@ -513,7 +478,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("AddProductStock", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                SqlParameter stockId = new SqlParameter("@stock_id", productStock.ProductStockID) { Direction = ParameterDirection.Output };
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter pricePerProduct = new SqlParameter("@price_per_product", productStock.SalePrice / productStock.Quantity);
@@ -543,7 +507,6 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                productStock.ProductStockID = (int)stockId.Value;
             }
             catch (Exception e)
             {
@@ -577,7 +540,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateProductStock", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter stockId = new SqlParameter("@stock_id", productStock.ProductStockID) { Direction = ParameterDirection.Output };
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
@@ -605,7 +567,6 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                productStock.ProductStockID = (int)stockId.Value;
             }
             catch (Exception e)
             {
@@ -973,7 +934,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("AddOffer", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter offerIdParam = new SqlParameter("@offer_id", offer.OfferID) { Direction = ParameterDirection.Output };
                 SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
                 SqlParameter productIdParam = new SqlParameter("@product_id", offer.ProductID);
                 SqlParameter discountPercentageParam = new SqlParameter("@discount_percentage", offer.DiscountPercentage);
@@ -984,7 +944,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter validToMonthParam = new SqlParameter("@valid_to_month", offer.ValidToMonth);
                 SqlParameter validToYearParam = new SqlParameter("@valid_to_year", offer.ValidToYear);
 
-                cmd.Parameters.Add(offerIdParam);
                 cmd.Parameters.Add(reasonParam);
                 cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(discountPercentageParam);
@@ -997,8 +956,6 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
-
-                offer.OfferID = (int)offerIdParam.Value;
             }
             catch (Exception e)
             {
@@ -1032,7 +989,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("UpdateOffer", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter offerIdParam = new SqlParameter("@offer_id", offer.OfferID) { Direction = ParameterDirection.Output };
                 SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
                 SqlParameter productIdParam = new SqlParameter("@product_id", offer.ProductID);
                 SqlParameter discountPercentageParam = new SqlParameter("@discount_percentage", offer.DiscountPercentage);
@@ -1043,7 +999,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter validToMonthParam = new SqlParameter("@valid_to_month", offer.ValidToMonth);
                 SqlParameter validToYearParam = new SqlParameter("@valid_to_year", offer.ValidToYear);
 
-                cmd.Parameters.Add(offerIdParam);
                 cmd.Parameters.Add(reasonParam);
                 cmd.Parameters.Add(productIdParam);
                 cmd.Parameters.Add(discountPercentageParam);
@@ -1057,7 +1012,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 conn.Open();
                 cmd.ExecuteNonQuery();
 
-                offer.OfferID = (int)offerIdParam.Value;
             }
             catch (Exception e)
             {
