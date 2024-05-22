@@ -140,7 +140,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         {
             return administratorDAL.GetAllUsers();
         }
-        public void CategoryOperation(string categoryName, OperationsType opType = OperationsType.Insert)
+        public void CategoryOperation(string categoryName, int categoryId, OperationsType opType = OperationsType.Insert)
         {
             if (categoryName == null || categoryName == "")
             {
@@ -157,6 +157,9 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             else if (opType == OperationsType.Delete)
             {
                 administratorDAL.DeleteProductCategory(category);
+            } else if (opType == OperationsType.Update)
+            {
+                administratorDAL.UpdateCategory(categoryName, categoryId);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the category."); }
         }
@@ -164,9 +167,9 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         {
             return administratorDAL.GetAllProductCategories();
         }
-        public void ProductOperation(string productName, int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
+        public void ProductOperation(int productId, string productName, int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
         {
-            if (productName == null || productName =="")
+            if (productName == null || productName == "")
             {
                 throw new ArgumentException("Null or empty product name");
             }
@@ -188,6 +191,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             product.Barcode = barcode;
             product.ManufacturerID = manufacturerID;
             product.CategoryID = categoryID;
+            product.ProductId = productId;
 
             if (opType == OperationsType.Insert)
             {
@@ -383,6 +387,27 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             {
                 throw new ArgumentException("Category with id " + categoryId + " doesn't exists.");
             }
+        }
+        public Product GetFullProduct(string productName, int barcode, int manufacturerId, int categoryId)
+        {
+
+            Product product = new Product();
+
+            product.ProductName = productName;
+            product.Barcode = barcode;
+            product.ManufacturerID = manufacturerId;
+            product.CategoryID = categoryId;
+            product.ProductId = administratorDAL.GetProductId(product);
+
+            return product;
+        }
+        public ProductCategory GetFullCategory(string categoryName)
+        {
+            ProductCategory category = new ProductCategory();
+            category.CategoryName = categoryName;
+            category.CategoryID = administratorDAL.GetCategoryId(categoryName);
+
+            return category;
         }
     }
 }

@@ -62,11 +62,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils\Enums\ViewType.cs" />
+    <Compile Include="Views\NewCategoryView.xaml.cs">
+      <DependentUpon>NewCategoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NewProductView.xaml.cs">
       <DependentUpon>NewProductView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProductView.xaml.cs">
-      <DependentUpon>ProductView.xaml</DependentUpon>
+    <Compile Include="Views\SupermarketOperations.xaml.cs">
+      <DependentUpon>SupermarketOperations.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserView.xaml.cs">
       <DependentUpon>UserView.xaml</DependentUpon>
@@ -128,11 +132,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\NewCategoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NewProductView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProductView.xaml">
+    <Page Include="Views\SupermarketOperations.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

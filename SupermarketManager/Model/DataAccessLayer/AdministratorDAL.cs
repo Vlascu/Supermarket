@@ -624,6 +624,64 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
+        public int GetProductId(Product product)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("GetProductId", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter productName = new SqlParameter("@product_name", product.ProductName);
+                SqlParameter productBarcode = new SqlParameter("@barcode", product.Barcode);
+                SqlParameter productManId = new SqlParameter("@manufacturer_id", product.ManufacturerID);
+                SqlParameter productCatId = new SqlParameter("@category_id", product.CategoryID);
+
+                cmd.Parameters.Add(productName);
+                cmd.Parameters.Add(productBarcode);
+                cmd.Parameters.Add(productManId);
+                cmd.Parameters.Add(productCatId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int productId = reader.GetInt32(0);
+                    return productId;
+                }
+                else
+                {
+                    throw new SqlOperationException("No product found.");
+                }
+            }
+            finally { conn.Close(); }
+        }
+        public int GetCategoryId(string categoryName)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("GetCategoryId", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter categoryNameParam = new SqlParameter("@category_name", categoryName);
+
+                cmd.Parameters.Add(categoryNameParam);
+         
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int categoryId = reader.GetInt32(0);
+                    return categoryId;
+                }
+                else
+                {
+                    throw new SqlOperationException("No category found.");
+                }
+            }
+            finally { conn.Close(); }
+        }
         public decimal GetStockPurchasePrice(ProductStock productStock)
         {
             try
@@ -778,27 +836,24 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-        private int GetCategoryId(string categoryName)
+        public void UpdateCategory(string categoryName, int categoryId)
         {
             try
             {
-                SqlCommand cmd = new SqlCommand("GetCategoryId", conn);
+                SqlCommand cmd = new SqlCommand("UpdateCategory", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter categoryNameParam = new SqlParameter("@category_name", categoryName);
+                SqlParameter categoryNameParam = new SqlParameter("@new_category_name", categoryName);
+                
+                cmd.Parameters.Add(new SqlParameter("@category_id", categoryId));
                 cmd.Parameters.Add(categoryNameParam);
 
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    return reader.GetInt32(0);
-                }
-                else
-                {
-                    throw new SqlOperationException("No category found.");
-                }
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to update category with name " + categoryName);
             }
             finally { conn.Close(); }
         }

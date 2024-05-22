@@ -39,7 +39,8 @@
                 <Button Content="User Menu" Margin="5" Grid.Row="0" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoToUsersCommand}"/>
                 <Button Content="Product Menu" Margin="5" Grid.Row="1" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                         Command="{Binding GoToProductCommand}"/>
-                <Button Content="Category Menu" Margin="5" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" FontSize="20"/>
+                <Button Content="Category Menu" Margin="5" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+                        Command="{Binding GoToCategoryCommand}"/>
                 <Button Content="Stock Menu" Margin="5" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}" FontSize="20"/>
                 <Button Content="Manufacturer" Margin="5" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" FontSize="20"/>
                 <Button Content="Go Back" Margin="5" Grid.Row="5" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoBackToAuthCommand}"/>

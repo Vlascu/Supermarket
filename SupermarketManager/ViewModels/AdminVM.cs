@@ -3,12 +3,14 @@ using SupermarketManager.Model.BusinessLogicLayer;
 using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Model.EntityLayer;
 using SupermarketManager.Utils;
+using SupermarketManager.Utils.Enums;
 using SupermarketManager.Utils.Managers;
 using SupermarketManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,15 +31,19 @@ namespace SupermarketManager.ViewModels
         public int ProductBarcode { get; set; } = 0;
         public int ManufacturerId { get; set; } = 0;
         public int CategoryId { get; set; } = 0;
+        public string CategoryName { get; set; }
+        public ViewType CurrentView { get; set; }
 
         private readonly AdministratorBLL administratorBLL;
-        private readonly Window window;
+        private readonly Window menuWindow;
         private Window subMenuWindow;
 
         public Window OpenedAddWindow { get; set; }
         public User SelectedUser { get; set; }
-        public Product SelectedProduct { get; set; }
         public bool IsAdding { get; set; } = true;
+
+        public Product SelectedProduct { get; set; }
+        public ProductCategory SelectedCategory { get; set; }
 
         private ICommand goToUsersCommand;
         private ICommand goBackFromSubmenuCommand;
@@ -47,8 +53,9 @@ namespace SupermarketManager.ViewModels
         private ICommand exitValuesCommand;
         private ICommand addCommand;
         private ICommand goToProductCommand;
-        private ICommand deleteProductCommand;
+        private ICommand deleteCommand;
         private ICommand updateCommand;
+        private ICommand goToCategoryCommand;
 
         public ICommand GoToUsersCommand
         {
@@ -135,7 +142,7 @@ namespace SupermarketManager.ViewModels
             {
                 if (addCommand == null)
                 {
-                    addCommand = new ParameterlessRelayCommand(AddProduct, param => true);
+                    addCommand = new ParameterlessRelayCommand(Add, param => true);
                 }
                 return addCommand;
             }
@@ -153,19 +160,19 @@ namespace SupermarketManager.ViewModels
             }
             set { goToProductCommand = value; }
         }
-        public ICommand DeleteProductCommand
+        public ICommand DeleteCommand
         {
             get
             {
-                if (deleteProductCommand == null)
+                if (deleteCommand == null)
                 {
-                    deleteProductCommand = new ParameterlessRelayCommand(DeleteProduct, param => true);
+                    deleteCommand = new ParameterlessRelayCommand(Delete, param => true);
                 }
-                return deleteProductCommand;
+                return deleteCommand;
             }
             set
             {
-                deleteProductCommand = value;
+                deleteCommand = value;
             }
         }
         public ICommand UpdateCommand
@@ -174,7 +181,7 @@ namespace SupermarketManager.ViewModels
             {
                 if (updateCommand == null)
                 {
-                    updateCommand = new ParameterlessRelayCommand(UpdateProduct, param => true);
+                    updateCommand = new ParameterlessRelayCommand(Update, param => true);
                 }
                 return updateCommand;
             }
@@ -183,9 +190,21 @@ namespace SupermarketManager.ViewModels
                 updateCommand = value;
             }
         }
+        public ICommand GoToCategoryCommand
+        {
+            get
+            {
+                if (goToCategoryCommand == null)
+                {
+                    goToCategoryCommand = new ParameterlessRelayCommand(GoToCategory, param => true);
+                }
+                return goToCategoryCommand;
+            }
+            set => goToCategoryCommand = value;
+        }
         public AdminVM(Window window)
         {
-            this.window = window;
+            this.menuWindow = window;
             this.administratorBLL = new AdministratorBLL(new AdministratorDAL());
 
             if (administratorBLL.CheckStocks())
@@ -231,25 +250,69 @@ namespace SupermarketManager.ViewModels
         private void GoBackToAuth()
         {
             MainWindow auth = new MainWindow();
-            this.window.Close();
+            this.menuWindow.Close();
             auth.ShowDialog();
         }
         private void SaveValues()
         {
             try
             {
-                OperationsType currentOpType = OperationsType.None;
-
-                if (IsAdding)
+         
+                if (CurrentView == ViewType.PRODUCT)
                 {
-                    currentOpType = OperationsType.Insert;
-                }
-                else
-                {
-                    currentOpType = OperationsType.Update;
-                }
 
-                administratorBLL.ProductOperation(ProductName, ProductBarcode, ManufacturerId, CategoryId, currentOpType);
+                    if (IsAdding)
+                    {
+                        administratorBLL.ProductOperation(0, ProductName, ProductBarcode, ManufacturerId, CategoryId, OperationsType.Insert);
+                        Products.Add(administratorBLL.GetFullProduct(ProductName, ProductBarcode, ManufacturerId, CategoryId));
+                        MessageBox.Show("Product added");
+                    }
+                    else
+                    {
+                        administratorBLL.ProductOperation((int)SelectedProduct.ProductId
+                            , ProductName, ProductBarcode, ManufacturerId, CategoryId, OperationsType.Update);
+                        ObservableCollection<Product> newProducts = administratorBLL.GetAllProducts();
+
+                        Products.Clear();
+
+                        foreach (Product product in newProducts)
+                        {
+                            Products.Add(product);
+                        }
+                        MessageBox.Show("Product updated");
+                    }
+                }
+                else if (CurrentView == ViewType.CATEGORY)
+                {
+
+                    if (IsAdding)
+                    {
+                        administratorBLL.CategoryOperation(CategoryName, 0, OperationsType.Insert);
+                        ProductCategories.Add(administratorBLL.GetFullCategory(CategoryName));
+                        MessageBox.Show("Category added.");
+
+                    }
+                    else
+                    {
+                        administratorBLL.CategoryOperation(CategoryName, (int)SelectedCategory.CategoryID,
+                            OperationsType.Update);
+                        ObservableCollection<ProductCategory> newCategories = administratorBLL.GetAllCategories();
+
+                        ProductCategories.Clear();
+
+                        foreach (ProductCategory category in newCategories)
+                        {
+                            ProductCategories.Add(category);
+                        }
+
+                        MessageBox.Show("Category updated.");
+                    }
+
+                }
+                if (OpenedAddWindow != null)
+                {
+                    OpenedAddWindow.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -263,46 +326,100 @@ namespace SupermarketManager.ViewModels
                 OpenedAddWindow.Close();
             }
         }
-        private void AddProduct()
+        private void Add()
         {
-            NewProductView newProductView = new NewProductView(this);
-            IsAdding = true;
-            newProductView.ShowDialog();
+            if (CurrentView == ViewType.PRODUCT)
+            {
+                NewProductView newProductView = new NewProductView(this);
+                IsAdding = true;
+                newProductView.ShowDialog();
+            }
+            else if (CurrentView == ViewType.CATEGORY)
+            {
+                NewCategoryView newCategoryView = new NewCategoryView(this);
+                IsAdding = true;
+                newCategoryView.ShowDialog();
+            }
+
         }
         private void GoToProduct()
         {
             Products = administratorBLL.GetAllProducts();
 
-            ProductView productView = new ProductView(this);
+            this.CurrentView = ViewType.PRODUCT;
+
+            SupermarketOperations productView = new SupermarketOperations(this);
             subMenuWindow = productView;
             productView.ShowDialog();
         }
-        private void DeleteProduct()
+        private void GoToCategory()
         {
-            if (SelectedProduct == null)
-            {
-                MessageBox.Show("First select a product for deletion.");
-            }
-            else
-            {
-                try
-                {
-                    administratorBLL.ProductOperation(SelectedProduct.ProductName, (int)SelectedProduct.Barcode,
-                        (int)SelectedProduct.ManufacturerID, (int)SelectedProduct.ProductId, OperationsType.Delete);
-                    Products.Remove(SelectedProduct);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+            ProductCategories = administratorBLL.GetAllCategories();
 
-            }
+            this.CurrentView = ViewType.CATEGORY;
+            SupermarketOperations categoryView = new SupermarketOperations(this);
+            subMenuWindow = categoryView;
+            categoryView.ShowDialog();
         }
-        private void UpdateProduct()
+        private void Delete()
         {
-            NewProductView newProductView = new NewProductView(this);
-            IsAdding = false;
-            newProductView.ShowDialog();
+            if (CurrentView == ViewType.PRODUCT)
+            {
+                if (SelectedProduct == null)
+                {
+                    MessageBox.Show("First select a product for deletion.");
+                }
+                else
+                {
+                    try
+                    {
+                        administratorBLL.ProductOperation(0, SelectedProduct.ProductName, (int)SelectedProduct.Barcode,
+                            (int)SelectedProduct.ManufacturerID, (int)SelectedProduct.ProductId, OperationsType.Delete);
+                        Products.Remove(SelectedProduct);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+            }
+            if (CurrentView == ViewType.CATEGORY)
+            {
+                if (SelectedCategory == null)
+                {
+                    MessageBox.Show("First select a category for deletion.");
+                }
+                else
+                {
+                    try
+                    {
+                        administratorBLL.CategoryOperation(SelectedCategory.CategoryName, 0, OperationsType.Delete);
+                        ProductCategories.Remove(SelectedCategory);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                }
+            }
+
+        }
+        private void Update()
+        {
+            if (CurrentView == ViewType.PRODUCT)
+            {
+                NewProductView newProductView = new NewProductView(this);
+                IsAdding = false;
+                newProductView.ShowDialog();
+            }
+            else if (CurrentView == ViewType.CATEGORY)
+            {
+                NewCategoryView newCategoryView = new NewCategoryView(this);
+                IsAdding = false;
+                newCategoryView.ShowDialog();
+            }
         }
     }
 }

@@ -16,13 +16,14 @@ using System.Windows.Shapes;
 namespace SupermarketManager.Views
 {
     /// <summary>
-    /// Interaction logic for ProductView.xaml
+    /// Interaction logic for NewCategoryView.xaml
     /// </summary>
-    public partial class ProductView : Window
+    public partial class NewCategoryView : Window
     {
-        public ProductView(AdminVM adminVM)
+        public NewCategoryView(AdminVM adminVM)
         {
             InitializeComponent();
+            adminVM.OpenedAddWindow = this;
             DataContext = adminVM;
         }
     }

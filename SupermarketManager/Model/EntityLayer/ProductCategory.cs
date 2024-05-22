@@ -16,6 +16,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 categoryID = value;
                 NotifyPropertyChanged("CategoryID");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -27,7 +28,12 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 categoryName = value;
                 NotifyPropertyChanged("CategoryName");
+                NotifyPropertyChanged("Display");
             }
+        }
+        public string Display
+        {
+            get { return $"ID: {categoryID}  Name: {categoryName}"; }
         }
     }
 }
