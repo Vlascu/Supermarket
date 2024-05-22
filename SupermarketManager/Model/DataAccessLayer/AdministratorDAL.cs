@@ -284,7 +284,7 @@ namespace SupermarketManager.Model.DataAccessLayer
         {
             try
             {
-                SqlCommand cmd = new SqlCommand("ManufacturerId", conn);
+                SqlCommand cmd = new SqlCommand("GetManufacturerId", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter manufacturerNameParam = new SqlParameter("@manufacturer_name", manufacturer.Name);
@@ -324,10 +324,10 @@ namespace SupermarketManager.Model.DataAccessLayer
                 {
                     Product product = new Product();
                     product.ProductName = reader.GetString(0);
-                    product.ProductId = reader.GetInt32(0);
-                    product.Barcode = reader.GetInt32(1);
-                    product.CategoryID = reader.GetInt32(2);
-                    product.ManufacturerID = reader.GetInt32(2);
+                    product.ProductId = reader.GetInt32(1);
+                    product.Barcode = reader.GetInt32(2); 
+                    product.CategoryID = reader.GetInt32(3); 
+                    product.ManufacturerID = reader.GetInt32(4);
 
                     result.Add(product);
                 }
@@ -454,15 +454,16 @@ namespace SupermarketManager.Model.DataAccessLayer
                     productStock.ProductStockID = reader.GetInt32(0);
                     productStock.ProductID = reader.GetInt32(1);
                     productStock.Quantity = reader.GetInt32(2);
-                    productStock.UnitOfMeasure = reader.GetString(2);
-                    productStock.DayOfSupply = reader.GetInt32(3);
-                    productStock.MonthOfSupply = reader.GetInt32(4);
-                    productStock.YearOfSupply = reader.GetInt32(5);
-                    productStock.DayOfExpiration = reader.GetInt32(6);
-                    productStock.MonthOfExpiration = reader.GetInt32(6);
-                    productStock.YearOfExpiration = reader.GetInt32(7);
-                    productStock.PurchasePrice = reader.GetDecimal(5);
-                    productStock.SalePrice = reader.GetDecimal(6);
+                    productStock.UnitOfMeasure = reader.GetString(3);
+                    productStock.DayOfSupply = reader.GetInt32(4);
+                    productStock.MonthOfSupply = reader.GetInt32(5);
+                    productStock.YearOfSupply = reader.GetInt32(6);
+                    productStock.DayOfExpiration = reader.GetInt32(7);
+                    productStock.MonthOfExpiration = reader.GetInt32(8);
+                    productStock.YearOfExpiration = reader.GetInt32(9);
+                    productStock.PurchasePrice = reader.GetDecimal(10);
+                    productStock.SalePrice = reader.GetDecimal(11);
+                    productStock.PricePerProduct = reader.GetDecimal(12);
 
                     result.Add(productStock);
                 }
@@ -583,26 +584,17 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
-                SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
-                SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
-                SqlParameter supplyYearParam = new SqlParameter("@supply_year", productStock.YearOfSupply);
                 SqlParameter expirationDayParam = new SqlParameter("@expiration_day", productStock.DayOfExpiration);
                 SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
                 SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
-                SqlParameter salePriceParam = new SqlParameter("@sale_price", productStock.SalePrice);
-
-
+              
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
-                cmd.Parameters.Add(supplyDayParam);
-                cmd.Parameters.Add(supplyMonthParam);
-                cmd.Parameters.Add(supplyYearParam);
                 cmd.Parameters.Add(expirationDayParam);
                 cmd.Parameters.Add(expirationMonthParam);
                 cmd.Parameters.Add(expirationYearParam);
                 cmd.Parameters.Add(purchasePriceParam);
-                cmd.Parameters.Add(salePriceParam);
 
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -621,6 +613,48 @@ namespace SupermarketManager.Model.DataAccessLayer
             catch (Exception e)
             {
                 throw new SqlOperationException(e.Message + " when trying to get product stock sale price with stock ID " + productStock.ProductStockID);
+            }
+            finally { conn.Close(); }
+        }
+        public ProductStock GetStock(int id)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("GetStock", conn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter stockId = new SqlParameter("@stock_id", id);
+
+                cmd.Parameters.Add(stockId);
+                
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    ProductStock productStock = new ProductStock();
+                    productStock.ProductStockID = reader.GetInt32(0);
+                    productStock.ProductID = reader.GetInt32(1);
+                    productStock.Quantity = reader.GetInt32(2);
+                    productStock.UnitOfMeasure = reader.GetString(3);
+                    productStock.DayOfSupply = reader.GetInt32(4);
+                    productStock.MonthOfSupply = reader.GetInt32(5);
+                    productStock.YearOfSupply = reader.GetInt32(6);
+                    productStock.DayOfExpiration = reader.GetInt32(7);
+                    productStock.MonthOfExpiration = reader.GetInt32(8);
+                    productStock.YearOfExpiration = reader.GetInt32(9);
+                    productStock.PurchasePrice = reader.GetDecimal(10);
+                    productStock.SalePrice = reader.GetDecimal(11);
+                    productStock.PricePerProduct = reader.GetDecimal(12);
+
+                    reader.Close();
+                    return productStock;
+                }
+                else
+                {
+                    throw new SqlOperationException("Can't find stock with id " + id);
+                }
             }
             finally { conn.Close(); }
         }
@@ -730,7 +764,7 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                 if (reader.Read())
                 {
-                    int markupPercentage = reader.GetInt32(1);
+                    int markupPercentage = reader.GetInt32(0);
                     reader.Close();
                     return markupPercentage;
                 }
@@ -1079,7 +1113,7 @@ namespace SupermarketManager.Model.DataAccessLayer
             bool exists = false;
             try
             {
-                SqlCommand cmd = new SqlCommand("CheckSimilarOfferExists", conn);
+                SqlCommand cmd = new SqlCommand("SimilarOfferExists", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter reasonParam = new SqlParameter("@reason", offer.Reason);
@@ -1161,7 +1195,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlCommand cmd = new SqlCommand("CheckProductCategoryExistsById", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                SqlParameter categoryId = new SqlParameter("@username", id);
+                SqlParameter categoryId = new SqlParameter("@category_id", id);
 
                 cmd.Parameters.Add(categoryId);
           
@@ -1186,6 +1220,44 @@ namespace SupermarketManager.Model.DataAccessLayer
             catch (Exception e)
             {
                 throw new SqlOperationException(e.Message + " When trying to check category with id  " + id);
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+        public bool CheckProductById(int id)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("CheckProductExistsById", conn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                SqlParameter productId = new SqlParameter("@product_id", id);
+
+                cmd.Parameters.Add(productId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int count = reader.GetInt32(0);
+                    if (count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+
+                    }
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " When trying to check product with id  " + id);
             }
             finally
             {

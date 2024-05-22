@@ -21,15 +21,23 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         {
             this.administratorDAL = administratorDAL;
         }
-        public void ProductStockOperation(decimal purchasePrice, int quantity, string unitOfMeasure, DateTime experationDate, int productId, OperationsType opType = OperationsType.Insert)
+        public void ProductStockOperation(int id, decimal purchasePrice, int quantity, string unitOfMeasure, DateTime experationDate, int productId, OperationsType opType = OperationsType.Insert)
         {
-            if (purchasePrice == 0)
+            if (purchasePrice <= 0)
             {
-                throw new ArgumentException("Can't have a purchase price of 0 when adding a stock.");
+                throw new ArgumentException("Can't have a purchase price smaller or 0 when adding a stock.");
             }
-            if (quantity == 0)
+            if (quantity <= 0)
             {
-                throw new ArgumentException("Can't have a quantity of 0 when adding a stock.");
+                throw new ArgumentException("Can't have a quantity smaller or 0 when adding a stock.");
+            }
+            if(unitOfMeasure == null || unitOfMeasure == "")
+            {
+                throw new ArgumentException("Can't have a null or empty unit of measure.");
+            }
+            if(productId == 0)
+            {
+                throw new ArgumentException("Can't have a productId smaller or 0.");
             }
 
             decimal pricePerProduct = purchasePrice / quantity;
@@ -49,18 +57,21 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.MonthOfSupply = DateTime.Now.Month;
             stock.YearOfSupply = DateTime.Now.Year;
             stock.ProductID = productId;
+            stock.ProductStockID = id;
 
             if (opType == OperationsType.Insert)
             {
+                CheckProductExists(productId);
+
                 administratorDAL.AddProductStock(stock);
             }
             else if (opType == OperationsType.Update)
             {
+                CheckProductExists(productId);
                 administratorDAL.UpdateProductStock(stock);
             }
             else if (opType == OperationsType.Delete)
             {
-                stock.ProductStockID = administratorDAL.GetStockId(stock);
                 administratorDAL.DeleteProductStock(stock);
             }
             else { throw new ArgumentException("Can't have another option than add, update or delete for the stock."); }
@@ -103,7 +114,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 throw new ArgumentException("New sale price can't smaller then purchase price.");
             }
         }
-        public void ManufacturerOperation(string name, string countryOfOrigin, OperationsType opType = OperationsType.Insert)
+        public void ManufacturerOperation(int id, string name, string countryOfOrigin, OperationsType opType = OperationsType.Insert)
         {
             if (name == null || name == "")
             {
@@ -117,6 +128,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             Manufacturer manufacturer = new Manufacturer();
             manufacturer.Name = name;
             manufacturer.CountryOfOrigin = countryOfOrigin;
+            manufacturer.ManufacturerID = id;
 
             if (opType == OperationsType.Insert)
             {
@@ -388,6 +400,13 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 throw new ArgumentException("Category with id " + categoryId + " doesn't exists.");
             }
         }
+        private void CheckProductExists(int id)
+        {
+            if(!administratorDAL.CheckProductById(id))
+            {
+                throw new ArgumentException("Product with id " + id + " doesn't exists.");
+            }
+        }
         public Product GetFullProduct(string productName, int barcode, int manufacturerId, int categoryId)
         {
 
@@ -408,6 +427,28 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             category.CategoryID = administratorDAL.GetCategoryId(categoryName);
 
             return category;
+        }
+        public Manufacturer GetFullManufacturer(string manufacturerName, string countryOfOrigin) 
+        { 
+            Manufacturer manufacturer = new Manufacturer();
+            manufacturer.Name = manufacturerName;
+            manufacturer.CountryOfOrigin = countryOfOrigin;
+            manufacturer.ManufacturerID = administratorDAL.GetManufacturerId(manufacturer);
+
+            return manufacturer;
+        }
+        public ProductStock GetFullStock(decimal pPrice, int quantity, string unitOfMeasure, DateTime exp, int productId)
+        {
+            ProductStock stock = new ProductStock();
+            stock.Quantity = quantity;
+            stock.UnitOfMeasure = unitOfMeasure;
+            stock.PurchasePrice = pPrice;
+            stock.DayOfExpiration = exp.Day;
+            stock.MonthOfExpiration = exp.Month;
+            stock.YearOfExpiration = exp.Year;
+            stock.ProductID = productId;
+
+            return administratorDAL.GetStock( administratorDAL.GetStockId(stock));
         }
     }
 }

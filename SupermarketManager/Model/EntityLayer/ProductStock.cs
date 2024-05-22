@@ -16,6 +16,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 productStockID = value;
                 NotifyPropertyChanged("ProductStockID");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -27,6 +28,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 productID = value;
                 NotifyPropertyChanged("StockProductID");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -38,6 +40,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 quantity = value;
                 NotifyPropertyChanged("Quantity");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -49,6 +52,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 unitOfMeasure = value;
                 NotifyPropertyChanged("UnitOfMeasure");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -60,6 +64,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 monthOfSupply = value;
                 NotifyPropertyChanged("MonthOfSupply");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -71,6 +76,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 dayOfSupply = value;
                 NotifyPropertyChanged("DayOfSupply");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -82,8 +88,10 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 yearOfSupply = value;
                 NotifyPropertyChanged("YearOfSupply");
+                NotifyPropertyChanged("Display");
             }
         }
+        // TODO: Delete unnecessary notify
 
         private int? monthOfExpiration;
         public int? MonthOfExpiration
@@ -93,6 +101,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 monthOfExpiration = value;
                 NotifyPropertyChanged("MonthOfExpiration");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -104,6 +113,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 dayOfExpiration = value;
                 NotifyPropertyChanged("DayOfExpiration");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -115,6 +125,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 yearOfExpiration = value;
                 NotifyPropertyChanged("YearOfExpiration");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -126,6 +137,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 purchasePrice = value;
                 NotifyPropertyChanged("PurchasePrice");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -137,6 +149,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 salePrice = value;
                 NotifyPropertyChanged("SalePrice");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -148,7 +161,17 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 pricePerProduct = value;
                 NotifyPropertyChanged("PricePerProduct");
+                NotifyPropertyChanged("Display");
             }
+        }
+
+        public string Display
+        {
+            get { return $"ID: {productStockID}  |  PP: {purchasePrice}  |  " +
+                    $"QTY: {quantity}  |  UM: {unitOfMeasure}  |  " +
+                    $"DOS: {dayOfSupply}  |  MOS: {monthOfSupply}  |  YOS: {yearOfSupply}  |  " +
+                    $"DOE: {dayOfExpiration}  |  MOE: {monthOfExpiration}  |  YOE:{yearOfExpiration}  |  " +
+                    $"SP: {salePrice}  |  PPP: {pricePerProduct}"; }
         }
     }
 }

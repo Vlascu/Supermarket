@@ -20,6 +20,7 @@ namespace SupermarketManager.ViewModels
 {
     public class AdminVM
     {
+        //Items
         public ObservableCollection<User> Users { get; set; }
         public ObservableCollection<ProductCategory> ProductCategories { get; set; }
         public ObservableCollection<Product> Products { get; set; }
@@ -27,24 +28,39 @@ namespace SupermarketManager.ViewModels
         public ObservableCollection<Offer> Offers { get; set; }
         public ObservableCollection<ProductStock> Stocks { get; set; }
         public ObservableCollection<Receipt> Receipts { get; set; }
+
+        //Input binding
         public string ProductName { get; set; }
         public int ProductBarcode { get; set; } = 0;
         public int ManufacturerId { get; set; } = 0;
         public int CategoryId { get; set; } = 0;
         public string CategoryName { get; set; }
-        public ViewType CurrentView { get; set; }
+        public string ManufacturerName { get; set; }
+        public string ManufacturerCOO { get; set; }
+        public decimal StockPurchasePrice { get; set; }
+        public int StockQuantity { get; set; }
+        public int StockProductId { get; set; }
+        public int StockDOE { get; set; }
+        public int StockMOE { get; set; }
+        public int StockYOE { get; set; }
+        public string StockUOM { get; set; }
 
         private readonly AdministratorBLL administratorBLL;
         private readonly Window menuWindow;
         private Window subMenuWindow;
 
+        public ViewType CurrentView { get; set; }
         public Window OpenedAddWindow { get; set; }
-        public User SelectedUser { get; set; }
         public bool IsAdding { get; set; } = true;
 
+        //Update selected items
+        public User SelectedUser { get; set; }
         public Product SelectedProduct { get; set; }
         public ProductCategory SelectedCategory { get; set; }
+        public Manufacturer SelectedManufacturer { get; set; }
+        public ProductStock SelectedStock { get; set; }
 
+        //Commands
         private ICommand goToUsersCommand;
         private ICommand goBackFromSubmenuCommand;
         private ICommand deleteUserCommand;
@@ -56,7 +72,24 @@ namespace SupermarketManager.ViewModels
         private ICommand deleteCommand;
         private ICommand updateCommand;
         private ICommand goToCategoryCommand;
+        private ICommand goToManufacturerCommand;
+        private ICommand goToStockCommand;
 
+        public ICommand GoToStockCommand
+        {
+            get
+            {
+                if(goToStockCommand == null)
+                {
+                    goToStockCommand = new ParameterlessRelayCommand(GoToStock, param => true);
+                }
+                return goToStockCommand;
+            }
+            set
+            {
+                goToStockCommand = value;
+            }
+        }
         public ICommand GoToUsersCommand
         {
             get
@@ -202,6 +235,19 @@ namespace SupermarketManager.ViewModels
             }
             set => goToCategoryCommand = value;
         }
+        public ICommand GoToManufacturerCommand
+        {
+            get
+            {
+                if(goToManufacturerCommand == null)
+                {
+                    goToManufacturerCommand = new ParameterlessRelayCommand(GoToManufacturer, param => true);
+                }
+                return goToManufacturerCommand;
+            }
+            set { goToManufacturerCommand = value;}
+
+        }
         public AdminVM(Window window)
         {
             this.menuWindow = window;
@@ -271,14 +317,10 @@ namespace SupermarketManager.ViewModels
                     {
                         administratorBLL.ProductOperation((int)SelectedProduct.ProductId
                             , ProductName, ProductBarcode, ManufacturerId, CategoryId, OperationsType.Update);
-                        ObservableCollection<Product> newProducts = administratorBLL.GetAllProducts();
 
-                        Products.Clear();
+                        
+                        UpdateList<Product>(administratorBLL.GetAllProducts(), Products);
 
-                        foreach (Product product in newProducts)
-                        {
-                            Products.Add(product);
-                        }
                         MessageBox.Show("Product updated");
                     }
                 }
@@ -288,26 +330,67 @@ namespace SupermarketManager.ViewModels
                     if (IsAdding)
                     {
                         administratorBLL.CategoryOperation(CategoryName, 0, OperationsType.Insert);
+
                         ProductCategories.Add(administratorBLL.GetFullCategory(CategoryName));
                         MessageBox.Show("Category added.");
-
                     }
                     else
                     {
                         administratorBLL.CategoryOperation(CategoryName, (int)SelectedCategory.CategoryID,
                             OperationsType.Update);
-                        ObservableCollection<ProductCategory> newCategories = administratorBLL.GetAllCategories();
-
-                        ProductCategories.Clear();
-
-                        foreach (ProductCategory category in newCategories)
-                        {
-                            ProductCategories.Add(category);
-                        }
+                       
+                        UpdateList<ProductCategory>(administratorBLL.GetAllCategories(), ProductCategories);
 
                         MessageBox.Show("Category updated.");
                     }
 
+                }
+                else if (CurrentView == ViewType.MANUFACTURER)
+                {
+                    if (IsAdding)
+                    {
+                        administratorBLL.ManufacturerOperation(0, ManufacturerName, ManufacturerCOO, OperationsType.Insert);
+
+                        Manufacturers.Add(administratorBLL.GetFullManufacturer(ManufacturerName, ManufacturerCOO));
+                        MessageBox.Show("Manufacturer added.");
+                    }
+                    else
+                    {
+                        administratorBLL.ManufacturerOperation((int)SelectedManufacturer.ManufacturerID, ManufacturerName,
+                            ManufacturerCOO, OperationsType.Update);
+
+                        UpdateList<Manufacturer>(administratorBLL.GetAllManufacturers(), Manufacturers);
+                        MessageBox.Show("Manufacturer updated.");
+                    }
+                } 
+                else if (CurrentView == ViewType.STOCK)
+                {
+                    if (IsAdding)
+                    {
+                        administratorBLL.ProductStockOperation(0, StockPurchasePrice,
+                            StockQuantity,
+                            StockUOM,
+                            new DateTime(StockYOE, StockMOE, StockDOE),
+                            StockProductId, 
+                            OperationsType.Insert);
+
+                        Stocks.Add(administratorBLL.GetFullStock(StockPurchasePrice,
+                            StockQuantity,
+                            StockUOM,
+                            new DateTime(StockYOE, StockMOE, StockDOE),
+                            StockProductId));
+                        MessageBox.Show("Stock added.");
+                    } else
+                    {
+                        administratorBLL.ProductStockOperation((int)SelectedStock.ProductStockID,StockPurchasePrice,
+                            StockQuantity,
+                            StockUOM,
+                            new DateTime(StockYOE, StockMOE, StockDOE),
+                            StockProductId, OperationsType.Update);
+
+                        UpdateList<ProductStock>(administratorBLL.GetAllProductStocks(), Stocks);
+                        MessageBox.Show("Stock updated");
+                    }
                 }
                 if (OpenedAddWindow != null)
                 {
@@ -319,6 +402,7 @@ namespace SupermarketManager.ViewModels
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void ExitValues()
         {
             if (OpenedAddWindow != null)
@@ -340,7 +424,17 @@ namespace SupermarketManager.ViewModels
                 IsAdding = true;
                 newCategoryView.ShowDialog();
             }
-
+            else if(CurrentView == ViewType.MANUFACTURER) 
+            {
+                NewManufacturerView newManufacturerView = new NewManufacturerView(this);
+                IsAdding = true;
+                newManufacturerView.ShowDialog();
+            } else if (CurrentView == ViewType.STOCK) 
+            { 
+                NewStockView newStockView = new NewStockView(this);
+                IsAdding = true;
+                newStockView.ShowDialog();
+            }
         }
         private void GoToProduct()
         {
@@ -348,18 +442,37 @@ namespace SupermarketManager.ViewModels
 
             this.CurrentView = ViewType.PRODUCT;
 
-            SupermarketOperations productView = new SupermarketOperations(this);
-            subMenuWindow = productView;
-            productView.ShowDialog();
+            OpenSubMenu();
         }
         private void GoToCategory()
         {
             ProductCategories = administratorBLL.GetAllCategories();
 
             this.CurrentView = ViewType.CATEGORY;
-            SupermarketOperations categoryView = new SupermarketOperations(this);
-            subMenuWindow = categoryView;
-            categoryView.ShowDialog();
+
+            OpenSubMenu();
+        }
+        private void GoToManufacturer()
+        {
+            Manufacturers = administratorBLL.GetAllManufacturers();
+
+            this.CurrentView = ViewType.MANUFACTURER;
+
+            OpenSubMenu();
+        }
+        private void GoToStock()
+        {
+            Stocks = administratorBLL.GetAllProductStocks();
+
+            this.CurrentView = ViewType.STOCK;
+
+            OpenSubMenu();
+        }
+        private void OpenSubMenu()
+        {
+            SupermarketOperations supermarketOperationsView = new SupermarketOperations(this);
+            subMenuWindow = supermarketOperationsView;
+            supermarketOperationsView.ShowDialog();
         }
         private void Delete()
         {
@@ -384,7 +497,7 @@ namespace SupermarketManager.ViewModels
 
                 }
             }
-            if (CurrentView == ViewType.CATEGORY)
+            else if (CurrentView == ViewType.CATEGORY)
             {
                 if (SelectedCategory == null)
                 {
@@ -403,6 +516,44 @@ namespace SupermarketManager.ViewModels
                     }
 
                 }
+            } else if (CurrentView == ViewType.MANUFACTURER) 
+            { 
+                if (SelectedManufacturer == null)
+                {
+                    MessageBox.Show("First select a manufacturer for deletion.");
+                } else
+                {
+                    try
+                    {
+                        administratorBLL.ManufacturerOperation(0, SelectedManufacturer.Name, SelectedManufacturer.CountryOfOrigin, OperationsType.Delete);
+                        Manufacturers.Remove(SelectedManufacturer);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            } else if (CurrentView == ViewType.STOCK)
+            {
+                if(SelectedStock == null)
+                {
+                    MessageBox.Show("First select a stock for deletion");
+                } else
+                {
+                    try
+                    {
+                        administratorBLL.ProductStockOperation((int)SelectedStock.ProductStockID, SelectedStock.PurchasePrice,
+                            (int)SelectedStock.Quantity,
+                            SelectedStock.UnitOfMeasure,
+                            new DateTime((int)SelectedStock.YearOfExpiration, (int)SelectedStock.MonthOfExpiration, (int)SelectedStock.DayOfExpiration),
+                            (int)SelectedStock.ProductID, OperationsType.Delete);
+
+                        Stocks.Remove(SelectedStock);
+                    } catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
             }
 
         }
@@ -419,6 +570,26 @@ namespace SupermarketManager.ViewModels
                 NewCategoryView newCategoryView = new NewCategoryView(this);
                 IsAdding = false;
                 newCategoryView.ShowDialog();
+            }
+            else if(CurrentView == ViewType.MANUFACTURER)
+            {
+                NewManufacturerView newManufacturerView = new NewManufacturerView(this);
+                IsAdding = false;
+                newManufacturerView.ShowDialog();
+            } else if (CurrentView == ViewType.STOCK)
+            {
+                NewStockView newStockView = new NewStockView(this);
+                IsAdding = false;
+                newStockView.ShowDialog();
+            }
+        }
+        private void UpdateList<T>(ObservableCollection<T> newList, ObservableCollection<T> oldList)
+        {
+            oldList.Clear();    
+
+            foreach (T item in newList)
+            {
+                oldList.Add(item);
             }
         }
     }

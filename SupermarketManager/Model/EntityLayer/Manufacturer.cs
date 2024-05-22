@@ -16,6 +16,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 manufacturerID = value;
                 NotifyPropertyChanged("ManufacturerID");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -27,6 +28,7 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 name = value;
                 NotifyPropertyChanged("Name");
+                NotifyPropertyChanged("Display");
             }
         }
 
@@ -38,7 +40,12 @@ namespace SupermarketManager.Model.EntityLayer
             {
                 countryOfOrigin = value;
                 NotifyPropertyChanged("CountryOfOrigin");
+                NotifyPropertyChanged("Display");
             }
+        }
+        public string Display
+        {
+            get { return $"ID: {manufacturerID}  |  Name: {name}  |  Origin: {countryOfOrigin}"; }
         }
     }
 }

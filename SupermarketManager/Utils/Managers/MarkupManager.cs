@@ -22,7 +22,7 @@ namespace SupermarketManager.Utils
             {
                 return 2;
             }
-            else if (price > 1000)
+            else if (price >= 1000)
             {
                 return 3;
             }

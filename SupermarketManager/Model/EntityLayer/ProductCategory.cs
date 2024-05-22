@@ -33,7 +33,7 @@ namespace SupermarketManager.Model.EntityLayer
         }
         public string Display
         {
-            get { return $"ID: {categoryID}  Name: {categoryName}"; }
+            get { return $"ID: {categoryID}  |  Name: {categoryName}"; }
         }
     }
 }

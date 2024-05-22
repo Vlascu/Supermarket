@@ -67,7 +67,7 @@ namespace SupermarketManager.Model.EntityLayer
         }
         public string Display
         {
-            get { return $"(P_ID: {productID}) (M_ID: {ManufacturerID}) (C_ID: {CategoryID}) {ProductName} {Barcode} "; }
+            get { return $"P_ID: {productID}  |  M_ID: {ManufacturerID}  |  C_ID: {CategoryID}  |  Name: {ProductName}  |  Barcode: {Barcode} "; }
         }
     }
 }
