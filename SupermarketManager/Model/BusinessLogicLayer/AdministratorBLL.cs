@@ -183,7 +183,14 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         }
         public ObservableCollection<ProductCategory> GetAllCategories()
         {
-            return administratorDAL.GetAllProductCategories();
+            var categories = administratorDAL.GetAllProductCategories();
+
+            foreach(ProductCategory productCategory in categories)
+            {
+                productCategory.TotalValue = administratorDAL.GetTotalSalePriceOfCategory(productCategory.CategoryName);
+            }
+
+            return categories;
         }
         public void ProductOperation(int productId, string productName, int barcode, int manufacturerID, int categoryID, OperationsType opType = OperationsType.Insert)
         {
@@ -249,27 +256,33 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             return administratorDAL.GetTotalSalePriceOfCategory(categoryName);
         }
 
-        public ObservableCollection<DailyRevenue> GetDailyRevenueByMonthAndCashier(string cashierName, string month)
+        public ObservableCollection<DailyRevenue> GetDailyRevenueByMonthAndCashier(string cashierName, int month, int year)
         {
             if (cashierName == null || cashierName.Length == 0)
             {
                 throw new ArgumentException("Selected cashier must have a name.");
             }
-            if (month == null || month.Length == 0)
+            if (month <= 0)
             {
-                throw new ArgumentException("Selected month must have a name.");
+                throw new ArgumentException("Selected month must bigger than 0.");
+            }
+            if (year <= 0)
+            {
+                throw new ArgumentException("Selected year must bigger than 0.");
             }
 
-            return administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month);
+            return administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month, year);
         }
-        public Product GetHighestReceiptProduct(int day)
+        public Tuple<Receipt, ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
         {
-            if (day == 0)
+            // TODO: Call the offer manager at the same way as the stock checker
+            // TODO: Now need a method to return for the receipt id and each product id from the list the quantity and subtotal from receipt_product
+            if (day <= 0 || month<=0 || year<=0)
             {
-                throw new ArgumentException("Can't have day 0.");
+                throw new ArgumentException("Can't have dates smaller or 0.");
             }
 
-            return administratorDAL.GetHighestReceiptProduct(day);
+            return administratorDAL.GetHighestReceiptProducts(day, month, year);
         }
         public bool ApplyOfferToAllStocks()
         {

@@ -16,6 +16,7 @@ namespace SupermarketManager.Utils
             {
                 dayNumber = value;
                 NotifyPropertyChanged("DayNumber");
+                NotifyPropertyChanged("Display");
             }
         }
         private decimal totalAmount;
@@ -25,6 +26,16 @@ namespace SupermarketManager.Utils
             {
                 totalAmount = value;
                 NotifyPropertyChanged("TotalAmount");
+                NotifyPropertyChanged("Display");
+            }
+        }
+
+        private string display;
+        public string Display
+        {
+            get
+            {
+                return $"Day: {dayNumber}  |  Value: {totalAmount}";
             }
         }
     }

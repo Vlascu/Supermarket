@@ -1,0 +1,55 @@
+﻿<Window x:Class="SupermarketManager.Views.DayRevenues"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SupermarketManager.Views"
+        mc:Ignorable="d"
+        Title="DayRevenues" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- For buttons -->
+            <RowDefinition Height="*" />
+            <!-- For ListBox -->
+        </Grid.RowDefinitions>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Vertical"  Grid.Row="0" Margin="0,80,0,0" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                <StackPanel Margin="0,5">
+                    <Label Content="MOE" FontSize="20"/>
+                    <TextBox x:Name="Month" Height="25" Text="{Binding UserMOE}"/>
+                </StackPanel>
+                <StackPanel Margin="0,5">
+                    <Label Content="YOE" FontSize="20"/>
+                    <TextBox x:Name="Year" Height="25" Text="{Binding UserYOE}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="116">
+                <Button Name="Save" Margin="0,50,40,0" Height="60" Content="Save" Width="150" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+        Command="{Binding SaveValuesCommand}"/>
+                <Button Name="Exit" Height="60" Content="Exit" Width="150" Margin="0,50,0,0" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+        Command="{Binding ExitValuesCommand}"/>
+            </StackPanel>
+        </StackPanel>
+
+
+        <!-- ListBox -->
+        <ListBox Name="ItemsListBox" Grid.Row="1" Margin="150,264,150,85"
+             ItemsSource="{Binding DailyRevenuesList}"
+             HorizontalContentAlignment="Center"
+             Width="500">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Display}" 
+                           FontSize="25"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="10"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

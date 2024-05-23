@@ -28,7 +28,9 @@ namespace SupermarketManager.ViewModels
         public ObservableCollection<Offer> Offers { get; set; }
         public ObservableCollection<ProductStock> Stocks { get; set; }
         public ObservableCollection<Receipt> Receipts { get; set; }
-
+        public ObservableCollection<Product> ManufacturerProducts { get; set; }
+        public ObservableCollection<DailyRevenue> DailyRevenuesList { get; set; }
+ 
         //Input binding
         public string ProductName { get; set; }
         public int ProductBarcode { get; set; } = 0;
@@ -44,6 +46,8 @@ namespace SupermarketManager.ViewModels
         public int StockMOE { get; set; }
         public int StockYOE { get; set; }
         public string StockUOM { get; set; }
+        public int UserMOE { get; set; }
+        public int UserYOE { get; set; }
 
         private readonly AdministratorBLL administratorBLL;
         private readonly Window menuWindow;
@@ -74,7 +78,39 @@ namespace SupermarketManager.ViewModels
         private ICommand goToCategoryCommand;
         private ICommand goToManufacturerCommand;
         private ICommand goToStockCommand;
+        private ICommand goToManufacturerProducts;
+        private ICommand goToDailyRevenues;
 
+        public ICommand GoToDailyRevenues
+        {
+            get
+            {
+                if(goToDailyRevenues  == null)
+                {
+                    goToDailyRevenues = new ParameterlessRelayCommand(GoToRevenues, param=>true);
+                }
+                return goToDailyRevenues;
+            }
+            set
+            {
+                goToDailyRevenues = value;
+            }
+        }
+        public ICommand GoToManufacturerProducts
+        {
+            get
+            {
+                if(goToManufacturerProducts == null)
+                {
+                    goToManufacturerProducts = new ParameterlessRelayCommand(ShowManufacturerProducts, param => true);
+                }
+                return goToManufacturerProducts;
+            }
+            set
+            {
+                goToManufacturerProducts = value;
+            }
+        }
         public ICommand GoToStockCommand
         {
             get
@@ -392,6 +428,26 @@ namespace SupermarketManager.ViewModels
                         UpdateList<ProductStock>(administratorBLL.GetAllProductStocks(), Stocks);
                         MessageBox.Show("Stock updated");
                     }
+                } else if (CurrentView == ViewType.USER)
+                {
+                    DailyRevenuesList = new ObservableCollection<DailyRevenue>();
+
+                    var foundValues = administratorBLL.GetDailyRevenueByMonthAndCashier(SelectedUser.Username, UserMOE, UserYOE);
+
+                    if (foundValues == null || foundValues.Count ==0)
+                    {
+                        MessageBox.Show("No values found.");
+                    } else
+                    {
+                        foreach (var foundValue in foundValues)
+                        {
+                            if (foundValue != null)
+                            {
+                                DailyRevenuesList.Add(foundValue);
+                            }
+                        }
+                    }
+                    
                 }
                 if (OpenedAddWindow != null)
                 {
@@ -469,6 +525,21 @@ namespace SupermarketManager.ViewModels
             this.CurrentView = ViewType.STOCK;
 
             OpenSubMenu();
+        }
+        private void GoToRevenues()
+        {
+            if(SelectedUser == null)
+            {
+                MessageBox.Show("Please select a cashier");
+            } else if (SelectedUser.UserType == "Admin")
+            {
+                MessageBox.Show("Please select a cashier");
+            } else
+            {
+                DayRevenues  dayRevenues = new DayRevenues(this);
+                this.CurrentView = ViewType.USER;
+                dayRevenues.ShowDialog();
+            }
         }
         private void OpenSubMenu()
         {
@@ -600,5 +671,19 @@ namespace SupermarketManager.ViewModels
                 oldList.Add(item);
             }
         }
+        private void ShowManufacturerProducts()
+        {
+            if(SelectedManufacturer == null)
+            {
+                MessageBox.Show("Select a manufacturer first.");
+            } else
+            {
+                ManufacturerProducts = administratorBLL.GetProductsByManufacturer(SelectedManufacturer);
+
+                ManufacturerProducts manufacturerProducts = new ManufacturerProducts(this);
+                manufacturerProducts.ShowDialog();
+            }
+        }
+
     }
 }

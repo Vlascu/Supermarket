@@ -23,17 +23,9 @@ namespace SupermarketManager.Utils.Managers
 
             foreach (ProductStock stock in stocks)
             {
-                if (stock.YearOfExpiration < DateTime.Now.Year)
-                {
-                    administratorDAL.DeleteProductStock(stock);
-                    stocksDeleted++;
-                }
-                else if (stock.MonthOfExpiration < DateTime.Now.Month)
-                {
-                    administratorDAL.DeleteProductStock(stock);
-                    stocksDeleted++;
-                }
-                else if (stock.DayOfExpiration < DateTime.Now.Day)
+                DateTime expirationDate = new DateTime((int)stock.YearOfExpiration, (int)stock.MonthOfExpiration, (int)stock.DayOfExpiration);
+
+                if (expirationDate < DateTime.Now)
                 {
                     administratorDAL.DeleteProductStock(stock);
                     stocksDeleted++;

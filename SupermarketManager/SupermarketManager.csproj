@@ -63,6 +63,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Utils\Enums\ViewType.cs" />
+    <Compile Include="Views\DayRevenues.xaml.cs">
+      <DependentUpon>DayRevenues.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManufacturerProducts.xaml.cs">
+      <DependentUpon>ManufacturerProducts.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NewCategoryView.xaml.cs">
       <DependentUpon>NewCategoryView.xaml</DependentUpon>
     </Compile>
@@ -82,6 +88,10 @@
       <DependentUpon>UserView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AdministratorMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DayRevenues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -138,6 +148,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ManufacturerProducts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NewCategoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

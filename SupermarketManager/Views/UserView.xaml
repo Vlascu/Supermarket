@@ -17,10 +17,12 @@
 
         <!-- Buttons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Margin="10" >
-            <Button Name="DeleteButton" Margin="0,50,40,0" Height="60" Content="Delete" Width="150" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+            <Button Name="DeleteButton" Margin="0,50,40,0" Height="60" Content="Delete" Width="170" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                     Command="{Binding DeleteUserCommand}"/>
-            <Button Name="BackButton" Height="60" Content="Back" Width="150" Margin="0,50,0,0" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+            <Button Name="BackButton" Height="60" Content="Back" Width="170" Margin="0,50,50,0" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                     Command="{Binding GoBackFromSubmenuCommand}"/>
+            <Button Name="DailyRevenues" Height="60" Content="Daily Revenues" Width="170" Margin="0,50,0,0" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+        Command="{Binding GoToDailyRevenues}"/>
         </StackPanel>
 
         <!-- ListBox -->

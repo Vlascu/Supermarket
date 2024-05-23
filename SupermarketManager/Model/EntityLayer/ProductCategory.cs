@@ -31,9 +31,19 @@ namespace SupermarketManager.Model.EntityLayer
                 NotifyPropertyChanged("Display");
             }
         }
+        private decimal totalValue;
+        public decimal TotalValue
+        {
+            get { return totalValue; }
+            set
+            {
+                totalValue = value;
+                NotifyPropertyChanged("Display");
+            }
+        }
         public string Display
         {
-            get { return $"ID: {categoryID}  |  Name: {categoryName}"; }
+            get { return $"ID: {categoryID}  |  Name: {categoryName}  |  Value: {totalValue}"; }
         }
     }
 }

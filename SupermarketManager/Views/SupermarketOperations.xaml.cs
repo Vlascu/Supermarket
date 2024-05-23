@@ -34,6 +34,7 @@ namespace SupermarketManager.Views
             }
             else if (adminVM.CurrentView == ViewType.MANUFACTURER) 
             {
+                ManufacturerProd.Visibility = Visibility.Visible;
                 ChangeListBoxBinding<Manufacturer>(adminVM.Manufacturers, "SelectedManufacturer");
             }
             else if(adminVM.CurrentView == ViewType.CATEGORY)

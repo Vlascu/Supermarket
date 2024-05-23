@@ -11,6 +11,7 @@ namespace SupermarketManager.Utils.Enums
         PRODUCT,
         MANUFACTURER,
         CATEGORY,
-        STOCK
+        STOCK,
+        USER
     }
 }
