@@ -552,6 +552,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
                 SqlParameter salePriceParam = new SqlParameter("@sale_price", productStock.SalePrice);
+                SqlParameter pricePerProduct = new SqlParameter("@per_product", productStock.PricePerProduct);
 
 
                 cmd.Parameters.Add(stockProductID);
@@ -565,6 +566,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.Parameters.Add(expirationYearParam);
                 cmd.Parameters.Add(purchasePriceParam);
                 cmd.Parameters.Add(salePriceParam);
+                cmd.Parameters.Add(pricePerProduct);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();

@@ -79,7 +79,7 @@ namespace SupermarketManager.ViewModels
         {
             get
             {
-                if(goToStockCommand == null)
+                if (goToStockCommand == null)
                 {
                     goToStockCommand = new ParameterlessRelayCommand(GoToStock, param => true);
                 }
@@ -239,13 +239,13 @@ namespace SupermarketManager.ViewModels
         {
             get
             {
-                if(goToManufacturerCommand == null)
+                if (goToManufacturerCommand == null)
                 {
                     goToManufacturerCommand = new ParameterlessRelayCommand(GoToManufacturer, param => true);
                 }
                 return goToManufacturerCommand;
             }
-            set { goToManufacturerCommand = value;}
+            set { goToManufacturerCommand = value; }
 
         }
         public AdminVM(Window window)
@@ -303,7 +303,7 @@ namespace SupermarketManager.ViewModels
         {
             try
             {
-         
+
                 if (CurrentView == ViewType.PRODUCT)
                 {
 
@@ -318,7 +318,7 @@ namespace SupermarketManager.ViewModels
                         administratorBLL.ProductOperation((int)SelectedProduct.ProductId
                             , ProductName, ProductBarcode, ManufacturerId, CategoryId, OperationsType.Update);
 
-                        
+
                         UpdateList<Product>(administratorBLL.GetAllProducts(), Products);
 
                         MessageBox.Show("Product updated");
@@ -338,7 +338,7 @@ namespace SupermarketManager.ViewModels
                     {
                         administratorBLL.CategoryOperation(CategoryName, (int)SelectedCategory.CategoryID,
                             OperationsType.Update);
-                       
+
                         UpdateList<ProductCategory>(administratorBLL.GetAllCategories(), ProductCategories);
 
                         MessageBox.Show("Category updated.");
@@ -362,7 +362,7 @@ namespace SupermarketManager.ViewModels
                         UpdateList<Manufacturer>(administratorBLL.GetAllManufacturers(), Manufacturers);
                         MessageBox.Show("Manufacturer updated.");
                     }
-                } 
+                }
                 else if (CurrentView == ViewType.STOCK)
                 {
                     if (IsAdding)
@@ -371,7 +371,7 @@ namespace SupermarketManager.ViewModels
                             StockQuantity,
                             StockUOM,
                             new DateTime(StockYOE, StockMOE, StockDOE),
-                            StockProductId, 
+                            StockProductId,
                             OperationsType.Insert);
 
                         Stocks.Add(administratorBLL.GetFullStock(StockPurchasePrice,
@@ -380,9 +380,10 @@ namespace SupermarketManager.ViewModels
                             new DateTime(StockYOE, StockMOE, StockDOE),
                             StockProductId));
                         MessageBox.Show("Stock added.");
-                    } else
+                    }
+                    else
                     {
-                        administratorBLL.ProductStockOperation((int)SelectedStock.ProductStockID,StockPurchasePrice,
+                        administratorBLL.ProductStockOperation((int)SelectedStock.ProductStockID, StockPurchasePrice,
                             StockQuantity,
                             StockUOM,
                             new DateTime(StockYOE, StockMOE, StockDOE),
@@ -424,13 +425,14 @@ namespace SupermarketManager.ViewModels
                 IsAdding = true;
                 newCategoryView.ShowDialog();
             }
-            else if(CurrentView == ViewType.MANUFACTURER) 
+            else if (CurrentView == ViewType.MANUFACTURER)
             {
                 NewManufacturerView newManufacturerView = new NewManufacturerView(this);
                 IsAdding = true;
                 newManufacturerView.ShowDialog();
-            } else if (CurrentView == ViewType.STOCK) 
-            { 
+            }
+            else if (CurrentView == ViewType.STOCK)
+            {
                 NewStockView newStockView = new NewStockView(this);
                 IsAdding = true;
                 newStockView.ShowDialog();
@@ -516,12 +518,14 @@ namespace SupermarketManager.ViewModels
                     }
 
                 }
-            } else if (CurrentView == ViewType.MANUFACTURER) 
-            { 
+            }
+            else if (CurrentView == ViewType.MANUFACTURER)
+            {
                 if (SelectedManufacturer == null)
                 {
                     MessageBox.Show("First select a manufacturer for deletion.");
-                } else
+                }
+                else
                 {
                     try
                     {
@@ -533,12 +537,14 @@ namespace SupermarketManager.ViewModels
                         MessageBox.Show(ex.Message);
                     }
                 }
-            } else if (CurrentView == ViewType.STOCK)
+            }
+            else if (CurrentView == ViewType.STOCK)
             {
-                if(SelectedStock == null)
+                if (SelectedStock == null)
                 {
                     MessageBox.Show("First select a stock for deletion");
-                } else
+                }
+                else
                 {
                     try
                     {
@@ -549,7 +555,8 @@ namespace SupermarketManager.ViewModels
                             (int)SelectedStock.ProductID, OperationsType.Delete);
 
                         Stocks.Remove(SelectedStock);
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
@@ -571,12 +578,13 @@ namespace SupermarketManager.ViewModels
                 IsAdding = false;
                 newCategoryView.ShowDialog();
             }
-            else if(CurrentView == ViewType.MANUFACTURER)
+            else if (CurrentView == ViewType.MANUFACTURER)
             {
                 NewManufacturerView newManufacturerView = new NewManufacturerView(this);
                 IsAdding = false;
                 newManufacturerView.ShowDialog();
-            } else if (CurrentView == ViewType.STOCK)
+            }
+            else if (CurrentView == ViewType.STOCK)
             {
                 NewStockView newStockView = new NewStockView(this);
                 IsAdding = false;
@@ -585,7 +593,7 @@ namespace SupermarketManager.ViewModels
         }
         private void UpdateList<T>(ObservableCollection<T> newList, ObservableCollection<T> oldList)
         {
-            oldList.Clear();    
+            oldList.Clear();
 
             foreach (T item in newList)
             {

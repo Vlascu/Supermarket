@@ -31,11 +31,11 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             {
                 throw new ArgumentException("Can't have a quantity smaller or 0 when adding a stock.");
             }
-            if(unitOfMeasure == null || unitOfMeasure == "")
+            if (unitOfMeasure == null || unitOfMeasure == "")
             {
                 throw new ArgumentException("Can't have a null or empty unit of measure.");
             }
-            if(productId == 0)
+            if (productId == 0)
             {
                 throw new ArgumentException("Can't have a productId smaller or 0.");
             }
@@ -53,11 +53,16 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.DayOfExpiration = experationDate.Day;
             stock.MonthOfExpiration = experationDate.Month;
             stock.YearOfExpiration = experationDate.Year;
-            stock.DayOfSupply = DateTime.Now.Day;
-            stock.MonthOfSupply = DateTime.Now.Month;
-            stock.YearOfSupply = DateTime.Now.Year;
+
+            if (opType == OperationsType.Insert)
+            {
+                stock.DayOfSupply = DateTime.Now.Day;
+                stock.MonthOfSupply = DateTime.Now.Month;
+                stock.YearOfSupply = DateTime.Now.Year;
+            }
             stock.ProductID = productId;
             stock.ProductStockID = id;
+            stock.PricePerProduct = markupProductPrice;
 
             if (opType == OperationsType.Insert)
             {
@@ -169,7 +174,8 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             else if (opType == OperationsType.Delete)
             {
                 administratorDAL.DeleteProductCategory(category);
-            } else if (opType == OperationsType.Update)
+            }
+            else if (opType == OperationsType.Update)
             {
                 administratorDAL.UpdateCategory(categoryName, categoryId);
             }
@@ -402,7 +408,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         }
         private void CheckProductExists(int id)
         {
-            if(!administratorDAL.CheckProductById(id))
+            if (!administratorDAL.CheckProductById(id))
             {
                 throw new ArgumentException("Product with id " + id + " doesn't exists.");
             }
@@ -428,8 +434,8 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             return category;
         }
-        public Manufacturer GetFullManufacturer(string manufacturerName, string countryOfOrigin) 
-        { 
+        public Manufacturer GetFullManufacturer(string manufacturerName, string countryOfOrigin)
+        {
             Manufacturer manufacturer = new Manufacturer();
             manufacturer.Name = manufacturerName;
             manufacturer.CountryOfOrigin = countryOfOrigin;
@@ -448,7 +454,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             stock.YearOfExpiration = exp.Year;
             stock.ProductID = productId;
 
-            return administratorDAL.GetStock( administratorDAL.GetStockId(stock));
+            return administratorDAL.GetStock(administratorDAL.GetStockId(stock));
         }
     }
 }
