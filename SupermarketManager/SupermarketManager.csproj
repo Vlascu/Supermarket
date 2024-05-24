@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils\DataModels\ReceiptDetails.cs" />
     <Compile Include="Utils\Enums\ViewType.cs" />
     <Compile Include="Views\DayRevenues.xaml.cs">
       <DependentUpon>DayRevenues.xaml</DependentUpon>
@@ -80,6 +81,9 @@
     </Compile>
     <Compile Include="Views\NewStockView.xaml.cs">
       <DependentUpon>NewStockView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReceiptDetailsView.xaml.cs">
+      <DependentUpon>ReceiptDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SupermarketOperations.xaml.cs">
       <DependentUpon>SupermarketOperations.xaml</DependentUpon>
@@ -165,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewStockView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReceiptDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

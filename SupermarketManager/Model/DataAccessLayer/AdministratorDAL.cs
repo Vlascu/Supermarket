@@ -325,8 +325,8 @@ namespace SupermarketManager.Model.DataAccessLayer
                     Product product = new Product();
                     product.ProductName = reader.GetString(0);
                     product.ProductId = reader.GetInt32(1);
-                    product.Barcode = reader.GetInt32(2); 
-                    product.CategoryID = reader.GetInt32(3); 
+                    product.Barcode = reader.GetInt32(2);
+                    product.CategoryID = reader.GetInt32(3);
                     product.ManufacturerID = reader.GetInt32(4);
 
                     result.Add(product);
@@ -594,7 +594,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
                 SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
                 SqlParameter purchasePriceParam = new SqlParameter("@purchase_price", productStock.PurchasePrice);
-              
+
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
                 cmd.Parameters.Add(expirationDayParam);
@@ -632,7 +632,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter stockId = new SqlParameter("@stock_id", id);
 
                 cmd.Parameters.Add(stockId);
-                
+
                 conn.Open();
 
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -696,6 +696,36 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
+        public Tuple<int, decimal> GetHighestReceiptProductDetails(int receiptId, int productId)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("GetReceiptProductDetails", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter receiptIdParam = new SqlParameter("@receipt_id", receiptId);
+                SqlParameter productIdParam = new SqlParameter("@product_id", productId);
+
+                cmd.Parameters.Add(receiptIdParam);
+                cmd.Parameters.Add(productIdParam);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int quantity = reader.GetInt32(0);
+                    decimal subtotal = reader.GetDecimal(1);
+
+                    return new Tuple<int, decimal>(quantity, subtotal);
+                }
+                else
+                {
+                    throw new SqlOperationException("No product details from receipt found.");
+                }
+            }
+            finally { conn.Close(); }
+        }
         public int GetCategoryId(string categoryName)
         {
             try
@@ -706,7 +736,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter categoryNameParam = new SqlParameter("@category_name", categoryName);
 
                 cmd.Parameters.Add(categoryNameParam);
-         
+
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -884,7 +914,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter categoryNameParam = new SqlParameter("@new_category_name", categoryName);
-                
+
                 cmd.Parameters.Add(new SqlParameter("@category_id", categoryId));
                 cmd.Parameters.Add(categoryNameParam);
 
@@ -995,12 +1025,12 @@ namespace SupermarketManager.Model.DataAccessLayer
             }
             finally { conn.Close(); }
         }
-        public Tuple<Receipt,ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
+        public Tuple<Receipt, ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
         {
 
             try
             {
-                
+
                 Receipt highestReceipt = GetHighestReceipt(day, month, year);
 
                 ObservableCollection<Product> products = new ObservableCollection<Product>();
@@ -1026,8 +1056,8 @@ namespace SupermarketManager.Model.DataAccessLayer
 
                     products.Add(product);
                 }
-                
-                return new Tuple<Receipt,ObservableCollection<Product>>(highestReceipt, products);  
+
+                return new Tuple<Receipt, ObservableCollection<Product>>(highestReceipt, products);
             }
             finally { conn.Close(); }
         }
@@ -1173,9 +1203,9 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                 SqlParameter manufacturerId = new SqlParameter("@manufacturer_id", id);
-               
+
                 cmd.Parameters.Add(manufacturerId);
-            
+
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -1213,7 +1243,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter categoryId = new SqlParameter("@category_id", id);
 
                 cmd.Parameters.Add(categoryId);
-          
+
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 

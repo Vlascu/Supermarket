@@ -1,6 +1,7 @@
 ﻿using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Model.EntityLayer;
 using SupermarketManager.Utils;
+using SupermarketManager.Utils.DataModels;
 using SupermarketManager.Utils.Enums;
 using SupermarketManager.Utils.Managers;
 using System;
@@ -273,7 +274,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             return administratorDAL.GetDailyRevenueByMonthAndCashier(cashierName, month, year);
         }
-        public Tuple<Receipt, ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
+        private Tuple<Receipt, ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
         {
             // TODO: Call the offer manager at the same way as the stock checker
             // TODO: Now need a method to return for the receipt id and each product id from the list the quantity and subtotal from receipt_product
@@ -283,6 +284,35 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
 
             return administratorDAL.GetHighestReceiptProducts(day, month, year);
+        }
+        private Tuple<int, decimal> GetHighestReceiptProductDetails(int receiptId, int  productId)
+        {
+            if(receiptId <= 0 || productId <= 0)
+            {
+                throw new ArgumentException("Invalid id for receipt or product");
+            }
+
+            return administratorDAL.GetHighestReceiptProductDetails(receiptId, productId);
+        }
+        public Receipt GetReceiptDetails(ObservableCollection<ReceiptDetails> receiptDetailsList, int day, int month, int year)
+        {
+            var result = GetHighestReceiptProducts(day, month, year);
+
+            Receipt highestReceipt = result.Item1;
+            var products = result.Item2;
+
+            foreach(var product in products)
+            {
+                var details = GetHighestReceiptProductDetails((int)highestReceipt.ReceiptID, (int)product.ProductId);
+
+                ReceiptDetails receiptDetails = new ReceiptDetails();
+                receiptDetails.ProductQuantity = details.Item1;
+                receiptDetails.Subtotal = details.Item2;
+                receiptDetails.ProductName = product.ProductName;
+
+                receiptDetailsList.Add(receiptDetails);
+            }
+            return highestReceipt;
         }
         public bool ApplyOfferToAllStocks()
         {

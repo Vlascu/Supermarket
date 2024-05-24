@@ -34,6 +34,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <Button Content="User Menu" Margin="5" Grid.Row="0" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoToUsersCommand}"/>
@@ -45,7 +46,8 @@
                         Command="{Binding GoToStockCommand}"/>
                 <Button Content="Manufacturer Menu" Margin="5" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
                         Command="{Binding GoToManufacturerCommand}"/>
-                <Button Content="Go Back" Margin="5" Grid.Row="5" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoBackToAuthCommand}"/>
+                <Button Content="Receipt Details" Margin="5" Grid.Row="5" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoToReceiptDetails}"/>
+                <Button Content="Go Back" Margin="5" Grid.Row="6" Style="{StaticResource RoundedButtonStyle}" FontSize="20" Command="{Binding GoBackToAuthCommand}"/>
             </Grid>
         </Border>
     </Grid>

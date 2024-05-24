@@ -3,22 +3,25 @@ using SupermarketManager.Model.BusinessLogicLayer;
 using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Model.EntityLayer;
 using SupermarketManager.Utils;
+using SupermarketManager.Utils.DataModels;
 using SupermarketManager.Utils.Enums;
 using SupermarketManager.Utils.Managers;
 using SupermarketManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SupermarketManager.ViewModels
 {
-    public class AdminVM
+    public class AdminVM : INotifyPropertyChanged
     {
         //Items
         public ObservableCollection<User> Users { get; set; }
@@ -30,7 +33,8 @@ namespace SupermarketManager.ViewModels
         public ObservableCollection<Receipt> Receipts { get; set; }
         public ObservableCollection<Product> ManufacturerProducts { get; set; }
         public ObservableCollection<DailyRevenue> DailyRevenuesList { get; set; }
- 
+        public ObservableCollection<ReceiptDetails> ReceiptDetails { get; set; }
+
         //Input binding
         public string ProductName { get; set; }
         public int ProductBarcode { get; set; } = 0;
@@ -49,12 +53,43 @@ namespace SupermarketManager.ViewModels
         public int UserMOE { get; set; }
         public int UserYOE { get; set; }
 
+
+        //Output biding
+        private string cashierName;
+        private decimal receiptTotal;
+        public string CashierName
+        {
+            get { return cashierName; }
+            set
+            {
+                if (cashierName != value)
+                {
+                    cashierName = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public decimal ReceiptTotal
+        {
+            get { return receiptTotal; }
+            set
+            {
+                if (receiptTotal != value)
+                {
+                    receiptTotal = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
         private readonly AdministratorBLL administratorBLL;
         private readonly Window menuWindow;
         private Window subMenuWindow;
 
         public ViewType CurrentView { get; set; }
         public Window OpenedAddWindow { get; set; }
+        public ReceiptDetailsView ReceiptDetailsView { get; set; }
         public bool IsAdding { get; set; } = true;
 
         //Update selected items
@@ -63,6 +98,7 @@ namespace SupermarketManager.ViewModels
         public ProductCategory SelectedCategory { get; set; }
         public Manufacturer SelectedManufacturer { get; set; }
         public ProductStock SelectedStock { get; set; }
+
 
         //Commands
         private ICommand goToUsersCommand;
@@ -80,14 +116,46 @@ namespace SupermarketManager.ViewModels
         private ICommand goToStockCommand;
         private ICommand goToManufacturerProducts;
         private ICommand goToDailyRevenues;
+        private ICommand goToReceiptDetails;
+        private ICommand searchDetailsCommand;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand SearchDetailsCommand
+        {
+            get
+            {
+                if (searchDetailsCommand == null)
+                {
+                    searchDetailsCommand = new ParameterlessRelayCommand(SearchReceiptDetails, param => true);
+                }
+                return searchDetailsCommand;
+            }
+            set { searchDetailsCommand = value; }
+        }
+
+        public ICommand GoToReceiptDetails
+        {
+            get
+            {
+                if (goToReceiptDetails == null)
+                {
+                    goToReceiptDetails = new ParameterlessRelayCommand(GoToReceipt, param => true);
+                }
+                return goToReceiptDetails;
+            }
+            set
+            {
+                goToReceiptDetails = value;
+            }
+        }
         public ICommand GoToDailyRevenues
         {
             get
             {
-                if(goToDailyRevenues  == null)
+                if (goToDailyRevenues == null)
                 {
-                    goToDailyRevenues = new ParameterlessRelayCommand(GoToRevenues, param=>true);
+                    goToDailyRevenues = new ParameterlessRelayCommand(GoToRevenues, param => true);
                 }
                 return goToDailyRevenues;
             }
@@ -100,7 +168,7 @@ namespace SupermarketManager.ViewModels
         {
             get
             {
-                if(goToManufacturerProducts == null)
+                if (goToManufacturerProducts == null)
                 {
                     goToManufacturerProducts = new ParameterlessRelayCommand(ShowManufacturerProducts, param => true);
                 }
@@ -428,16 +496,18 @@ namespace SupermarketManager.ViewModels
                         UpdateList<ProductStock>(administratorBLL.GetAllProductStocks(), Stocks);
                         MessageBox.Show("Stock updated");
                     }
-                } else if (CurrentView == ViewType.USER)
+                }
+                else if (CurrentView == ViewType.USER)
                 {
                     DailyRevenuesList = new ObservableCollection<DailyRevenue>();
 
                     var foundValues = administratorBLL.GetDailyRevenueByMonthAndCashier(SelectedUser.Username, UserMOE, UserYOE);
 
-                    if (foundValues == null || foundValues.Count ==0)
+                    if (foundValues == null || foundValues.Count == 0)
                     {
                         MessageBox.Show("No values found.");
-                    } else
+                    }
+                    else
                     {
                         foreach (var foundValue in foundValues)
                         {
@@ -447,7 +517,7 @@ namespace SupermarketManager.ViewModels
                             }
                         }
                     }
-                    
+
                 }
                 if (OpenedAddWindow != null)
                 {
@@ -494,6 +564,11 @@ namespace SupermarketManager.ViewModels
                 newStockView.ShowDialog();
             }
         }
+        private void GoToReceipt()
+        {
+            ReceiptDetailsView receiptDetailsView = new ReceiptDetailsView(this);
+            receiptDetailsView.ShowDialog();
+        }
         private void GoToProduct()
         {
             Products = administratorBLL.GetAllProducts();
@@ -528,15 +603,17 @@ namespace SupermarketManager.ViewModels
         }
         private void GoToRevenues()
         {
-            if(SelectedUser == null)
+            if (SelectedUser == null)
             {
                 MessageBox.Show("Please select a cashier");
-            } else if (SelectedUser.UserType == "Admin")
+            }
+            else if (SelectedUser.UserType == "Admin")
             {
                 MessageBox.Show("Please select a cashier");
-            } else
+            }
+            else
             {
-                DayRevenues  dayRevenues = new DayRevenues(this);
+                DayRevenues dayRevenues = new DayRevenues(this);
                 this.CurrentView = ViewType.USER;
                 dayRevenues.ShowDialog();
             }
@@ -673,10 +750,11 @@ namespace SupermarketManager.ViewModels
         }
         private void ShowManufacturerProducts()
         {
-            if(SelectedManufacturer == null)
+            if (SelectedManufacturer == null)
             {
                 MessageBox.Show("Select a manufacturer first.");
-            } else
+            }
+            else
             {
                 ManufacturerProducts = administratorBLL.GetProductsByManufacturer(SelectedManufacturer);
 
@@ -684,6 +762,33 @@ namespace SupermarketManager.ViewModels
                 manufacturerProducts.ShowDialog();
             }
         }
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private void SearchReceiptDetails()
+        {
+            DatePicker datePicker = ReceiptDetailsView.DatePickerControl;
 
+            if (datePicker.SelectedDate.HasValue)
+            {
+                DateTime selectedDate = datePicker.SelectedDate.Value;
+                int day = selectedDate.Day;
+                int month = selectedDate.Month;
+                int year = selectedDate.Year;
+
+                Receipt highestReceipt = administratorBLL.GetReceiptDetails(ReceiptDetails, day, month, year);
+
+                if (highestReceipt != null)
+                {
+                    CashierName = highestReceipt.CashierName;
+                    ReceiptTotal = highestReceipt.AmountReceived;
+                }
+            }
+            else
+            {
+                MessageBox.Show("No date selected.");
+            }
+        }
     }
 }
