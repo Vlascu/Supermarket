@@ -304,11 +304,14 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             foreach(var product in products)
             {
                 var details = GetHighestReceiptProductDetails((int)highestReceipt.ReceiptID, (int)product.ProductId);
+                var offerDetails = administratorDAL.GetOfferDetailsOfProduct((int)product.ProductId);
 
                 ReceiptDetails receiptDetails = new ReceiptDetails();
                 receiptDetails.ProductQuantity = details.Item1;
                 receiptDetails.Subtotal = details.Item2;
                 receiptDetails.ProductName = product.ProductName;
+                receiptDetails.OfferType = offerDetails.Item1;
+                receiptDetails.OfferPercentage = offerDetails.Item2;
 
                 receiptDetailsList.Add(receiptDetails);
             }
@@ -333,6 +336,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Expiration", stock);
+                    offer.DiscountPercentage = offerPercentage;
 
                     CheckAndAddOffer(offer);
 
@@ -346,6 +350,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Liquidation", stock);
+                    offer.DiscountPercentage = offerPercentage;
 
                     CheckAndAddOffer(offer);
                 }
@@ -358,6 +363,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                     administratorDAL.UpdateProductStock(stock);
 
                     Offer offer = AddOfferProperties("Liquidation", stock);
+                    offer.DiscountPercentage = offerPercentage;
 
                     CheckAndAddOffer(offer);
                 }
@@ -369,40 +375,84 @@ namespace SupermarketManager.Model.BusinessLogicLayer
             }
             return false;
         }
+        public bool CheckOffers()
+        {
+            List<CustomDate> datesChecked = JsonPersitence.LoadFromJson<CustomDate>("..\\..\\Resources\\offer_check.json");
+
+            CustomDate currentDate = new CustomDate
+            {
+                Day = DateTime.Now.Day,
+                Month = DateTime.Now.Month,
+                Year = DateTime.Now.Year
+            };
+
+            if (datesChecked == null || datesChecked.Count == 0)
+            {
+                JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\offer_check.json");
+                return ApplyOfferToAllStocks();
+            }
+            else
+            {
+                CustomDate lastCheck = datesChecked.Last();
+
+                if (IsDateUpdated(lastCheck))
+                {
+                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\offer_check.json");
+                    return ApplyOfferToAllStocks();
+                }
+            }
+            return false;
+        }
         public bool CheckStocks()
         {
-            List<CustomDate> customDates = JsonPersitence.LoadFromJson<CustomDate>("..\\..\\Resources\\stock_check.json");
+            List<CustomDate> datesChecked = JsonPersitence.LoadFromJson<CustomDate>("..\\..\\Resources\\stock_check.json");
 
-            CustomDate currentDate = new CustomDate();
-            currentDate.Day = DateTime.Now.Day;
-            currentDate.Month = DateTime.Now.Month;
-            currentDate.Year = DateTime.Now.Year;
+            CustomDate currentDate = new CustomDate
+            {
+                Day = DateTime.Now.Day,
+                Month = DateTime.Now.Month,
+                Year = DateTime.Now.Year
+            };
 
-            if (customDates == null || customDates.Count == 0)
+            if (datesChecked == null || datesChecked.Count == 0)
             {
                 JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                 return StockValidityManager.CheckStocks();
             }
             else
             {
-                CustomDate lastCheck = customDates.Last();
+                CustomDate lastCheck = datesChecked.Last();
 
-                if (lastCheck.Year < DateTime.Now.Year)
-                {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
-                    return StockValidityManager.CheckStocks();
-                }
-                else if (lastCheck.Month < DateTime.Now.Month)
-                {
-                    JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
-                    return StockValidityManager.CheckStocks();
-                }
-                else if (lastCheck.Day < DateTime.Now.Day)
+                if (IsDateUpdated(lastCheck))
                 {
                     JsonPersitence.SaveToJson<CustomDate>(currentDate, "..\\..\\Resources\\stock_check.json");
                     return StockValidityManager.CheckStocks();
                 }
             }
+            return false;
+        }
+        public bool IsDateUpdated(CustomDate lastCheck)
+        {
+            CustomDate currentDate = new CustomDate
+            {
+                Day = DateTime.Now.Day,
+                Month = DateTime.Now.Month,
+                Year = DateTime.Now.Year
+            };
+
+            if (lastCheck.Year < currentDate.Year)
+            {
+                return true;
+            }
+            else if (lastCheck.Month < currentDate.Month)
+            {
+                return true;
+            }
+            else if (lastCheck.Day < currentDate.Day)
+            {
+                return true;
+            }
+
             return false;
         }
 

@@ -548,9 +548,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 SqlParameter stockProductID = new SqlParameter("@product_id", productStock.ProductID);
                 SqlParameter quantityParam = new SqlParameter("@quantity", productStock.Quantity);
                 SqlParameter unitOfMeasureParam = new SqlParameter("@unit_of_measure", productStock.UnitOfMeasure);
-                SqlParameter supplyDayParam = new SqlParameter("@supply_day", productStock.DayOfSupply);
-                SqlParameter supplyMonthParam = new SqlParameter("@supply_month", productStock.MonthOfSupply);
-                SqlParameter supplyYearParam = new SqlParameter("@supply_year", productStock.YearOfSupply);
                 SqlParameter expirationDayParam = new SqlParameter("@expiration_day", productStock.DayOfExpiration);
                 SqlParameter expirationMonthParam = new SqlParameter("@expiration_month", productStock.MonthOfExpiration);
                 SqlParameter expirationYearParam = new SqlParameter("@expiration_year", productStock.YearOfExpiration);
@@ -562,9 +559,6 @@ namespace SupermarketManager.Model.DataAccessLayer
                 cmd.Parameters.Add(stockProductID);
                 cmd.Parameters.Add(quantityParam);
                 cmd.Parameters.Add(unitOfMeasureParam);
-                cmd.Parameters.Add(supplyDayParam);
-                cmd.Parameters.Add(supplyMonthParam);
-                cmd.Parameters.Add(supplyYearParam);
                 cmd.Parameters.Add(expirationDayParam);
                 cmd.Parameters.Add(expirationMonthParam);
                 cmd.Parameters.Add(expirationYearParam);
@@ -1150,6 +1144,40 @@ namespace SupermarketManager.Model.DataAccessLayer
             catch (Exception e)
             {
                 throw new SqlOperationException(e.Message + " when trying to update offer with ID: " + offer.OfferID);
+            }
+            finally { conn.Close(); }
+        }
+        public Tuple<string, int> GetOfferDetailsOfProduct(int productId)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("GetOfferDetails", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter productIdParam = new SqlParameter("@product_id", productId);
+
+                cmd.Parameters.Add(productIdParam);
+
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string reason = reader.GetString(0);
+                    int percentage = reader.GetInt32(1);
+
+                    reader.Close();
+                    return new Tuple<string, int>(reason, percentage);
+                }
+                else
+                {
+                    throw new SqlOperationException("No offer found for product id " + productId);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new SqlOperationException(e.Message + " when trying to check for similar offer");
             }
             finally { conn.Close(); }
         }

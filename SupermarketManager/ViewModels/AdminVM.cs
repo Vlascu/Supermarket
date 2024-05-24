@@ -361,6 +361,10 @@ namespace SupermarketManager.ViewModels
             {
                 MessageBox.Show("Some stocks expired and got deleted");
             }
+            if(administratorBLL.CheckOffers())
+            {
+                MessageBox.Show("Some offers got applied");
+            }
         }
         private void GoToUsers()
         {

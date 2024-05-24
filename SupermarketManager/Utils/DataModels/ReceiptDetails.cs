@@ -50,9 +50,19 @@ namespace SupermarketManager.Utils.DataModels
                 NotifyPropertyChanged("Display");
             }
         }
+        private int offerPercentage;
+        public int OfferPercentage
+        {
+            get { return offerPercentage; }
+            set
+            {
+                offerPercentage = value;
+                NotifyPropertyChanged("Display");
+            }
+        }
         public string Display
         {
-            get { return $"Qty: {productQuantity}  |  Name: {productName}  |  Subtotal: {subtotal}  |  Offer: {offerType}" ; }
+            get { return $"Qty: {productQuantity}  |  Name: {productName}  |  Subtotal: {subtotal}  |  Offer Reason: {offerType}  |  Offer Value: {offerPercentage}%" ; }
         }
     }
 }

@@ -64,46 +64,46 @@
     </ApplicationDefinition>
     <Compile Include="Utils\DataModels\ReceiptDetails.cs" />
     <Compile Include="Utils\Enums\ViewType.cs" />
-    <Compile Include="Views\DayRevenues.xaml.cs">
+    <Compile Include="Views\Admin\DetailsViews\DayRevenues.xaml.cs">
       <DependentUpon>DayRevenues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ManufacturerProducts.xaml.cs">
+    <Compile Include="Views\Admin\DetailsViews\ManufacturerProducts.xaml.cs">
       <DependentUpon>ManufacturerProducts.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewCategoryView.xaml.cs">
+    <Compile Include="Views\Admin\NewValuesViews\NewCategoryView.xaml.cs">
       <DependentUpon>NewCategoryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewManufacturerView.xaml.cs">
+    <Compile Include="Views\Admin\NewValuesViews\NewManufacturerView.xaml.cs">
       <DependentUpon>NewManufacturerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewProductView.xaml.cs">
+    <Compile Include="Views\Admin\NewValuesViews\NewProductView.xaml.cs">
       <DependentUpon>NewProductView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewStockView.xaml.cs">
+    <Compile Include="Views\Admin\NewValuesViews\NewStockView.xaml.cs">
       <DependentUpon>NewStockView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReceiptDetailsView.xaml.cs">
+    <Compile Include="Views\Admin\DetailsViews\ReceiptDetailsView.xaml.cs">
       <DependentUpon>ReceiptDetailsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SupermarketOperations.xaml.cs">
+    <Compile Include="Views\Admin\OperationsViews\SupermarketOperations.xaml.cs">
       <DependentUpon>SupermarketOperations.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserView.xaml.cs">
+    <Compile Include="Views\Admin\OperationsViews\UserView.xaml.cs">
       <DependentUpon>UserView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AdministratorMenu.xaml">
+    <Page Include="Views\Admin\MenuViews\AdministratorMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DayRevenues.xaml">
+    <Page Include="Views\Admin\DetailsViews\DayRevenues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Login.xaml">
+    <Page Include="Views\AuthViews\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="Views\AuthViews\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -142,45 +142,45 @@
     <Compile Include="Utils\Managers\StockValidityManager.cs" />
     <Compile Include="ViewModels\AdminVM.cs" />
     <Compile Include="ViewModels\AuthVM.cs" />
-    <Compile Include="Views\AdministratorMenu.xaml.cs">
+    <Compile Include="Views\Admin\MenuViews\AdministratorMenu.xaml.cs">
       <DependentUpon>AdministratorMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Login.xaml.cs">
+    <Compile Include="Views\AuthViews\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
+    <Compile Include="Views\AuthViews\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ManufacturerProducts.xaml">
+    <Page Include="Views\Admin\DetailsViews\ManufacturerProducts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewCategoryView.xaml">
+    <Page Include="Views\Admin\NewValuesViews\NewCategoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewManufacturerView.xaml">
+    <Page Include="Views\Admin\NewValuesViews\NewManufacturerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewProductView.xaml">
+    <Page Include="Views\Admin\NewValuesViews\NewProductView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewStockView.xaml">
+    <Page Include="Views\Admin\NewValuesViews\NewStockView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ReceiptDetailsView.xaml">
+    <Page Include="Views\Admin\DetailsViews\ReceiptDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SupermarketOperations.xaml">
+    <Page Include="Views\Admin\OperationsViews\SupermarketOperations.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserView.xaml">
+    <Page Include="Views\Admin\OperationsViews\UserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,6 +208,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\offer_check.json" />
     <None Include="Resources\stock_check.json" />
   </ItemGroup>
   <ItemGroup>
