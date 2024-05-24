@@ -69,5 +69,24 @@ namespace SupermarketManager.Model.EntityLayer
         {
             get { return $"P_ID: {productID}  |  M_ID: {ManufacturerID}  |  C_ID: {CategoryID}  |  Name: {ProductName}  |  Barcode: {Barcode} "; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Product product)
+            {
+                return Nullable.Equals(ProductId, product.ProductId) &&
+                       string.Equals(ProductName, product.ProductName) &&
+                       Nullable.Equals(Barcode, product.Barcode) &&
+                       Nullable.Equals(CategoryID, product.CategoryID) &&
+                       Nullable.Equals(ManufacturerID, product.ManufacturerID);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ProductId, ProductName, Barcode, CategoryID, ManufacturerID);
+        }
+
     }
 }

@@ -19,17 +19,6 @@ namespace SupermarketManager.Model.EntityLayer
             }
         }
 
-        private int? receiptProductId;
-        public int? ReceiptProductId
-        {
-            get { return receiptProductId; }
-            set
-            {
-                receiptProductId = value;
-                NotifyPropertyChanged("ReceiptProductId");
-            }
-        }
-
         private int? monthOfIssuing;
         public int? MonthOfIssuing
         {

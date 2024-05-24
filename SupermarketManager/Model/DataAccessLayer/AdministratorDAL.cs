@@ -1003,12 +1003,11 @@ namespace SupermarketManager.Model.DataAccessLayer
                 {
                     Receipt highestReceipt = new Receipt();
                     highestReceipt.ReceiptID = reader.GetInt32(0);
-                    highestReceipt.ReceiptProductId = reader.GetInt32(1);
-                    highestReceipt.MonthOfIssuing = reader.GetInt32(2);
-                    highestReceipt.DayOfIssuing = reader.GetInt32(3);
-                    highestReceipt.YearOfIssuing = reader.GetInt32(4);
-                    highestReceipt.CashierName = reader.GetString(5);
-                    highestReceipt.AmountReceived = reader.GetDecimal(6);
+                    highestReceipt.MonthOfIssuing = reader.GetInt32(1);
+                    highestReceipt.DayOfIssuing = reader.GetInt32(2);
+                    highestReceipt.YearOfIssuing = reader.GetInt32(3);
+                    highestReceipt.CashierName = reader.GetString(4);
+                    highestReceipt.AmountReceived = reader.GetDecimal(5);
 
                     return highestReceipt;
                 }
@@ -1165,7 +1164,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 if (reader.Read())
                 {
                     string reason = reader.GetString(0);
-                    int percentage = reader.GetInt32(1);
+                    int percentage = (int)reader.GetDouble(1);
 
                     reader.Close();
                     return new Tuple<string, int>(reason, percentage);

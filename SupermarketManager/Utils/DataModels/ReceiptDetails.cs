@@ -20,6 +20,12 @@ namespace SupermarketManager.Utils.DataModels
                 NotifyPropertyChanged("Display");
             }
         }
+        private int productId;
+        public int ProductId
+        {
+            get; set;
+        }
+
         private string productName;
         public string ProductName
         {

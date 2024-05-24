@@ -1,0 +1,62 @@
+﻿<Window x:Class="SupermarketManager.Views.Cashier.Checkout"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SupermarketManager.Views.Cashier"
+        mc:Ignorable="d"
+        Title="Checkout" Height="650" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <!-- For buttons -->
+            <RowDefinition Height="45" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <!-- For ListBox -->
+        </Grid.RowDefinitions>
+
+        <!-- Buttons -->
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Name="DeleteButton" Margin="10,50,10,0" Height="60" Content="Delete" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+                Command="{Binding DeleteCommand}" Grid.Column="0"/>
+            <Button Name="AddButton" Margin="10,50,10,0" Height="60" Content="Add Product" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+                Command="{Binding AddCommand}" Grid.Column="1"/>
+            <Button Name="Save" Margin="10,50,10,0" Height="60" Content="Save Receipt" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+                Command="{Binding SaveReceiptCommand}" Grid.Column="2"/>
+            <Button Name="BackButton" Margin="10,50,10,0" Height="60" Content="Back" Style="{StaticResource RoundedButtonStyle}" FontSize="20"
+                Command="{Binding GoBackCommand}" Grid.Column="3"/>
+
+        </Grid>
+
+        <TextBlock Text="Receipt" Grid.Row="1" FontSize="25" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        <!-- ListBox -->
+        <ListBox Name="ItemsListBox" Grid.Row="2" Margin="10"
+         ItemsSource="{Binding ReceiptDetails}"
+         HorizontalContentAlignment="Center"
+         SelectedItem="{Binding SelectedReceiptProduct}"
+         Width="700" Height="400">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Display}" 
+                       FontSize="25"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       Padding="10"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel  Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Total: " FontSize="20" Margin="0,0,0,0" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding TotalValue}" FontSize="20" Margin="0,0,0,0" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Window>

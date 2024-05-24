@@ -3,6 +3,7 @@ using SupermarketManager.Model.BusinessLogicLayer;
 using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Utils.Managers;
 using SupermarketManager.Views;
+using SupermarketManager.Views.Cashier;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,10 @@ namespace SupermarketManager.ViewModels
                     {
                         GoToAdminMenu();
                     }
+                    else if (UserType == "Cashier")
+                    {
+                        GoToCashierMenu();
+                    }
                 }
                 else
                 {
@@ -165,10 +170,13 @@ namespace SupermarketManager.ViewModels
                 if (authBLL.Login(Username, Password))
                 {
                     MessageBox.Show("Login succesfully.");
-                    
-                    if(authBLL.GetUserType(username, password) == "Admin")
+
+                    if (authBLL.GetUserType(username, password) == "Admin")
                     {
                         GoToAdminMenu();
+                    } else if (authBLL.GetUserType(username, password) == "Cashier")
+                    {
+                        GoToCashierMenu();
                     }
                 }
                 else
@@ -186,6 +194,12 @@ namespace SupermarketManager.ViewModels
             AdministratorMenu administratorMenu = new AdministratorMenu();
             this.currentWindow.Close();
             administratorMenu.ShowDialog();
+        }
+        private void GoToCashierMenu()
+        {
+            Checkout checkout = new Checkout(Username);
+            this.currentWindow.Close();
+            checkout.ShowDialog();
         }
     }
 }

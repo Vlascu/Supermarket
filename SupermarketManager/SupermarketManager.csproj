@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -64,6 +67,7 @@
     </ApplicationDefinition>
     <Compile Include="Utils\DataModels\ReceiptDetails.cs" />
     <Compile Include="Utils\Enums\ViewType.cs" />
+    <Compile Include="ViewModels\CashierVM.cs" />
     <Compile Include="Views\Admin\DetailsViews\DayRevenues.xaml.cs">
       <DependentUpon>DayRevenues.xaml</DependentUpon>
     </Compile>
@@ -90,6 +94,12 @@
     </Compile>
     <Compile Include="Views\Admin\OperationsViews\UserView.xaml.cs">
       <DependentUpon>UserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cashier\AddProduct.xaml.cs">
+      <DependentUpon>AddProduct.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cashier\Checkout.xaml.cs">
+      <DependentUpon>Checkout.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\Admin\MenuViews\AdministratorMenu.xaml">
       <SubType>Designer</SubType>
@@ -181,6 +191,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Admin\OperationsViews\UserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Cashier\AddProduct.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Cashier\Checkout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

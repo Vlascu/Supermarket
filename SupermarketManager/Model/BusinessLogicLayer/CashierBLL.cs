@@ -1,5 +1,6 @@
 ﻿using SupermarketManager.Model.DataAccessLayer;
 using SupermarketManager.Model.EntityLayer;
+using SupermarketManager.Utils.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,8 +63,17 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             return cashierDAL.GetSelectedProductPrice(productId, productName, quantity);
         }
+        public void SaveReceipt(Receipt receipt, List<ReceiptDetails> receiptDetails)
+        {
+            cashierDAL.AddReceipt(receipt, receiptDetails);
 
-        public void SellProduct(int productId, string productName, int quantity)
+            foreach (var detail in  receiptDetails)
+            {
+                SellProduct(detail.ProductId, detail.ProductName, detail.ProductQuantity);
+            }
+        }
+        
+        private void SellProduct(int productId, string productName, int quantity)
         {
             if (productId == 0)
             {

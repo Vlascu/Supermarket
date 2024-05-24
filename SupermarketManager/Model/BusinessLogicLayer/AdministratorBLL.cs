@@ -276,8 +276,6 @@ namespace SupermarketManager.Model.BusinessLogicLayer
         }
         private Tuple<Receipt, ObservableCollection<Product>> GetHighestReceiptProducts(int day, int month, int year)
         {
-            // TODO: Call the offer manager at the same way as the stock checker
-            // TODO: Now need a method to return for the receipt id and each product id from the list the quantity and subtotal from receipt_product
             if (day <= 0 || month<=0 || year<=0)
             {
                 throw new ArgumentException("Can't have dates smaller or 0.");
@@ -316,6 +314,10 @@ namespace SupermarketManager.Model.BusinessLogicLayer
                 receiptDetailsList.Add(receiptDetails);
             }
             return highestReceipt;
+        }
+        public Tuple<string, int> GetOfferDetailsOfProduct(int productId)
+        {
+            return administratorDAL.GetOfferDetailsOfProduct(productId);
         }
         public bool ApplyOfferToAllStocks()
         {
