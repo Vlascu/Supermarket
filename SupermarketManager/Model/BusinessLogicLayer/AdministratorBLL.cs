@@ -188,7 +188,7 @@ namespace SupermarketManager.Model.BusinessLogicLayer
 
             foreach(ProductCategory productCategory in categories)
             {
-                productCategory.TotalValue = administratorDAL.GetTotalSalePriceOfCategory(productCategory.CategoryName);
+                    productCategory.TotalValue = administratorDAL.GetTotalSalePriceOfCategory(productCategory.CategoryName);
             }
 
             return categories;

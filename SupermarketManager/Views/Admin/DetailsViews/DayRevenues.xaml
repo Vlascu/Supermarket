@@ -36,7 +36,7 @@
 
 
         <!-- ListBox -->
-        <ListBox Name="ItemsListBox" Grid.Row="1" Margin="150,264,150,85"
+        <ListBox Name="ItemsListBox" Grid.Row="1"
              ItemsSource="{Binding DailyRevenuesList}"
              HorizontalContentAlignment="Center"
              Width="500">

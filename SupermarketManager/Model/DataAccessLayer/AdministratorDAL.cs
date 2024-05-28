@@ -1041,11 +1041,11 @@ namespace SupermarketManager.Model.DataAccessLayer
                 while (reader.Read())
                 {
                     Product product = new Product();
-                    product.ProductName = reader.GetString(0);
                     product.ProductId = reader.GetInt32(0);
-                    product.Barcode = reader.GetInt32(1);
-                    product.CategoryID = reader.GetInt32(2);
-                    product.ManufacturerID = reader.GetInt32(3);
+                    product.ProductName = reader.GetString(1);
+                    product.Barcode = reader.GetInt32(2);
+                    product.CategoryID = reader.GetInt32(3);
+                    product.ManufacturerID = reader.GetInt32(4);
 
                     products.Add(product);
                 }
@@ -1171,7 +1171,7 @@ namespace SupermarketManager.Model.DataAccessLayer
                 }
                 else
                 {
-                    throw new SqlOperationException("No offer found for product id " + productId);
+                    return new Tuple<string, int>("NO OFFER", 0);
                 }
             }
             catch (Exception e)

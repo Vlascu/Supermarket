@@ -356,6 +356,7 @@ namespace SupermarketManager.ViewModels
         {
             this.menuWindow = window;
             this.administratorBLL = new AdministratorBLL(new AdministratorDAL());
+            this.ReceiptDetails = new ObservableCollection<ReceiptDetails>();
 
             if (administratorBLL.CheckStocks())
             {
@@ -518,12 +519,13 @@ namespace SupermarketManager.ViewModels
                             if (foundValue != null)
                             {
                                 DailyRevenuesList.Add(foundValue);
+                                NotifyPropertyChanged("DailyRevenuesList");
                             }
                         }
                     }
 
                 }
-                if (OpenedAddWindow != null)
+                if (OpenedAddWindow != null && CurrentView !=ViewType.USER)
                 {
                     OpenedAddWindow.Close();
                 }
@@ -786,7 +788,9 @@ namespace SupermarketManager.ViewModels
                 if (highestReceipt != null)
                 {
                     CashierName = highestReceipt.CashierName;
+                    NotifyPropertyChanged("CashierName");
                     ReceiptTotal = highestReceipt.AmountReceived;
+                    NotifyPropertyChanged("ReceiptTotal");
                 }
             }
             else

@@ -193,19 +193,32 @@ namespace SupermarketManager.ViewModels
             }
             else
             {
+                var keysToRemove = new List<Product>();
+                var keysToDecrement = new List<Product>();
+
                 foreach (var product in addedProducts.Keys)
                 {
                     if (SelectedReceiptProduct.ProductName == product.ProductName)
                     {
                         if (addedProducts[product] == 1)
                         {
-                            addedProducts.Remove(product);
+                            keysToRemove.Add(product);
                         }
                         else
                         {
-                            addedProducts[product]--;
+                            keysToDecrement.Add(product);
                         }
                     }
+                }
+
+                foreach (var product in keysToRemove)
+                {
+                    addedProducts.Remove(product);
+                }
+
+                foreach (var product in keysToDecrement)
+                {
+                    addedProducts[product]--;
                 }
 
                 ReceiptDetails.Clear();
@@ -260,6 +273,11 @@ namespace SupermarketManager.ViewModels
                     receipt.YearOfIssuing = DateTime.Now.Year;
 
                     cashierBLL.SaveReceipt(receipt, ReceiptDetails.ToList());
+
+                    MessageBox.Show("Receipt saved succesfully");
+
+                    addedProducts.Clear();
+                    ReceiptDetails.Clear();
                 }
                 catch (Exception ex)
                 {
